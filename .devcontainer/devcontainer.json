@@ -27,8 +27,8 @@
 				"vadimcn.vscode-lldb"
 			]
 		}
-	}
-	// "forwardPorts": [],
+	},
+	"forwardPorts": [5050]
 	// "postCreateCommand": "uname -a",
 	// "remoteUser": "root"
 }
