@@ -1,0 +1,19 @@
+[package]
+name = "server"
+version.workspace = true
+authors.workspace = true
+repository.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+tokio = { workspace = true, features = ["rt-multi-thread", "macros"] }
+serde = { workspace = true, features = ["derive"] }
+anyhow = { workspace = true, features = [] }
+axum = { version = "0.7", features = [] }
+tokio-postgres = { version = "0.7", features = [] }
+bb8-postgres = { version = "0.8", features = [] }
+bb8 = { version = "0.8", features = [] }
+tracing = { version = "0.1", features = [] }
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+tower-http = { version = "0.5", features = ["trace"] }
