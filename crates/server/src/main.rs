@@ -21,7 +21,7 @@ async fn main() -> Result<(), ServerError> {
     let server = Router::new()
         .with_state(database::get_pool().await?)
         .layer(TraceLayer::new_for_http())
-        //.nest("/", routers::default::router().await?)
+        .nest("/", routers::default::router().await?)
         .nest("/api", routers::api::router().await?);
     let listener = TcpListener::bind("0.0.0.0:5050").await?;
 
