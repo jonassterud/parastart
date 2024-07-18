@@ -1,30 +1,28 @@
+mod database;
 mod error;
-mod handler;
+mod routers;
 
-use axum::{
-    routing::get,
-    Router,
-};
+use axum::{routing::get, Router};
 use error::ServerError;
 use tokio::net::TcpListener;
 use tower_http::trace::TraceLayer;
-use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
+use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt, EnvFilter};
 
 #[tokio::main]
 async fn main() -> Result<(), ServerError> {
     // Set up tracing subscriber
+    const DEFAULT_FILTER: &str = "server=debug,tower_http=debug,axum::rejection=trace";
     tracing_subscriber::registry()
-        .with(
-            tracing_subscriber::EnvFilter::try_from_default_env()
-                .unwrap_or_else(|_| "server=debug,tower_http=debug,axum::rejection=trace".into()),
-        )
+        .with(EnvFilter::try_from_default_env().unwrap_or_else(|_| DEFAULT_FILTER.into()))
         .with(tracing_subscriber::fmt::layer())
         .init();
 
     // Create router and listener
     let server = Router::new()
-        .route("/", get(handler::root))
-        .layer(TraceLayer::new_for_http());
+        .with_state(database::get_pool().await?)
+        .layer(TraceLayer::new_for_http())
+        //.nest("/", routers::default::router().await?)
+        .nest("/api", routers::api::router().await?);
     let listener = TcpListener::bind("0.0.0.0:5050").await?;
 
     // Start listening
