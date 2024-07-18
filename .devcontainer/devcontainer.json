@@ -1,0 +1,34 @@
+{
+	"name": "Development",
+	"dockerComposeFile": "compose.yml",
+    "service": "devcontainer",
+    "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+	"features": {
+		"ghcr.io/devcontainers/features/rust:1": {}
+	},
+	"customizations": {
+		"vscode": {
+			"settings": {
+				"rust-analyzer.inlayHints.typeHints.enable": false,
+				"editor.tabSize": 4,
+				"editor.detectIndentation": false,
+				"editor.insertSpaces": true,
+				"files.insertFinalNewline": true,
+				"lldb.executable": "/usr/bin/lldb",
+				"files.watcherExclude": {
+					"**/target/**": true
+				}
+			},
+			"extensions": [
+				"rust-lang.rust-analyzer",
+				"serayuzgur.crates",
+				"tamasfe.even-better-toml",
+				"mutantdino.resourcemonitor",
+				"vadimcn.vscode-lldb"
+			]
+		}
+	}
+	// "forwardPorts": [],
+	// "postCreateCommand": "uname -a",
+	// "remoteUser": "root"
+}
