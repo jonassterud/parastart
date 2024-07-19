@@ -16,4 +16,4 @@ bb8-postgres = { version = "0.8", features = [] }
 bb8 = { version = "0.8", features = [] }
 tracing = { version = "0.1", features = [] }
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
-tower-http = { version = "0.5", features = ["trace"] }
+tower-http = { version = "0.5", features = ["trace", "fs"] }
