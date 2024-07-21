@@ -1,7 +1,7 @@
 mod database;
 mod error;
-mod routers;
 mod models;
+mod routers;
 
 use axum::Router;
 use error::ServerError;

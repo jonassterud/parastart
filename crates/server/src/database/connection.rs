@@ -5,7 +5,7 @@ use axum::{
     http::request::Parts,
 };
 use bb8::{Pool, PooledConnection};
-use bb8_postgres::{PostgresConnectionManager, tokio_postgres::NoTls};
+use bb8_postgres::{tokio_postgres::NoTls, PostgresConnectionManager};
 
 pub(crate) type ConnectionPool = Pool<PostgresConnectionManager<NoTls>>;
 pub struct DatabaseConnection(pub PooledConnection<'static, PostgresConnectionManager<NoTls>>);

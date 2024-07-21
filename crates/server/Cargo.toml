@@ -11,6 +11,9 @@ tokio = { workspace = true, features = ["rt-multi-thread", "macros"] }
 serde = { workspace = true, features = ["derive"] }
 anyhow = { workspace = true, features = [] }
 axum = { version = "0.7", features = [] }
+postgres-types = { version = "0.2", features = ["derive", "with-geo-types-0_7", "with-chrono-0_4"] }
+geo-types = { version = "0.7", features = [] }
+chrono = { version = "0.4", features = [] }
 bb8-postgres = { version = "0.8", features = [] }
 bb8 = { version = "0.8", features = [] }
 tracing = { version = "0.1", features = [] }

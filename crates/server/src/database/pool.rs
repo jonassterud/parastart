@@ -1,7 +1,10 @@
+use super::connection::ConnectionPool;
 use crate::error::ServerError;
 use bb8::Pool;
-use bb8_postgres::{PostgresConnectionManager, tokio_postgres::{self, NoTls}};
-use super::connection::ConnectionPool;
+use bb8_postgres::{
+    tokio_postgres::{self, NoTls},
+    PostgresConnectionManager,
+};
 
 pub async fn get_pool() -> Result<ConnectionPool, ServerError> {
     let config = tokio_postgres::Config::new()
