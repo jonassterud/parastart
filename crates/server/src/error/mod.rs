@@ -4,6 +4,13 @@ use axum::response::{IntoResponse, Response};
 #[derive(Debug)]
 pub struct ServerError(anyhow::Error);
 
+impl ServerError {
+    /// Creates a new [`ServerError`].
+    pub fn new(err: anyhow::Error) -> ServerError {
+        ServerError(err)
+    }
+}
+
 impl IntoResponse for ServerError {
     fn into_response(self) -> Response {
         (

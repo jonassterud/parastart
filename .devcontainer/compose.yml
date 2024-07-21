@@ -1,6 +1,8 @@
 services:
   devcontainer:
     image: mcr.microsoft.com/devcontainers/base:ubuntu
+    environment:
+      - DATABASE_URL=postgres://postgres:password@localhost
     volumes:
       - ../..:/workspaces:cached
     network_mode: service:db

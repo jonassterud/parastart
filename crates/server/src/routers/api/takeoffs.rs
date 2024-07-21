@@ -1,22 +1,20 @@
 use super::version::Version;
-use crate::{database::DatabaseConnection, error::ServerError, models::Takeoff};
-use axum::Json;
-use bb8_postgres::tokio_postgres::Row;
-use tracing::info;
+use crate::{error::ServerError, models::Takeoff};
+use axum::{Json, extract::State};
+use sqlx::PgPool;
 
 pub async fn get(
     version: Version,
-    DatabaseConnection(conn): DatabaseConnection,
-) -> Result<(), ServerError> {
-    let rows = conn.query("SELECT * FROM takeoffs", &[]).await?;
-    info!("{:?}", rows);
-
-    Ok(())
+    State(pool): State<PgPool>,
+) -> Result<Json<Vec<Takeoff>>, ServerError> {
+    let takeoffs: Vec<Takeoff> = sqlx::query_as("SELECT * FROM takeoffs").fetch_all(&pool).await?;
+    
+    Ok(Json(takeoffs))
 }
 
 pub async fn put(
     version: Version,
-    DatabaseConnection(conn): DatabaseConnection,
+    State(pool): State<PgPool>,
 ) -> Result<String, ServerError> {
     Ok(format!("OK\n\nVersion: {:?}", version))
 }
