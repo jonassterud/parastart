@@ -1,8 +1,8 @@
-use tower_http::services::ServeDir;
+use crate::{database::ConnectionPool, error::ServerError};
 use axum::Router;
-use crate::error::ServerError;
+use tower_http::services::ServeDir;
 
-pub async fn router() -> Result<Router, ServerError> {
+pub async fn router() -> Result<Router<ConnectionPool>, ServerError> {
     let dir = ServeDir::new("crates/www");
     let router = Router::new().nest_service("/", dir);
 

@@ -1,18 +1,19 @@
+mod health;
+mod takeoffs;
+mod version;
+
+use crate::models;
+use crate::database::ConnectionPool;
+use crate::error::ServerError;
 use axum::{
+    routing::get,
     Router,
-    response::Response,
-    middleware::{self, Next},
-    extract::Request,
 };
 
-use crate::{database, error::ServerError};
+pub async fn router() -> Result<Router<ConnectionPool>, ServerError> {
+    let router = Router::new()
+        .route("/:version/health", get(health::get))
+        .route("/:version/takeoffs", get(takeoffs::get));
 
-const VERSION: usize = 0;
-
-pub async fn router() -> Result<Router, ServerError> {
-    Ok(Router::new().nest(&format!("/v{VERSION}"), current().await?))
-}
-
-async fn current() -> Result<Router, ServerError> {
-    Ok(Router::new())
+    Ok(router)
 }

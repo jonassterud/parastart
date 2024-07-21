@@ -1,8 +1,6 @@
 use crate::error::ServerError;
 use bb8::Pool;
-use bb8_postgres::PostgresConnectionManager;
-use tokio_postgres::NoTls;
-
+use bb8_postgres::{PostgresConnectionManager, tokio_postgres::{self, NoTls}};
 use super::connection::ConnectionPool;
 
 pub async fn get_pool() -> Result<ConnectionPool, ServerError> {

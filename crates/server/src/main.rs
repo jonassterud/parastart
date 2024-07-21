@@ -1,8 +1,9 @@
 mod database;
 mod error;
 mod routers;
+mod models;
 
-use axum::{routing::get, Router};
+use axum::Router;
 use error::ServerError;
 use tokio::net::TcpListener;
 use tower_http::trace::TraceLayer;
@@ -17,13 +18,13 @@ async fn main() -> Result<(), ServerError> {
         .with(tracing_subscriber::fmt::layer())
         .init();
 
-    // Create router and listener
-    let server = Router::new()
-        .with_state(database::get_pool().await?)
-        .layer(TraceLayer::new_for_http())
-        .nest("/", routers::default::router().await?)
-        .nest("/api", routers::api::router().await?);
+    // Create listener and router
     let listener = TcpListener::bind("0.0.0.0:5050").await?;
+    let server = Router::new()
+        .nest("/", routers::default::router().await?)
+        .nest("/api", routers::api::router().await?)
+        .with_state(database::get_pool().await?)
+        .layer(TraceLayer::new_for_http());
 
     // Start listening
     tracing::debug!("listening on http://{}", listener.local_addr()?);
