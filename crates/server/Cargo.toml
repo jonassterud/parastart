@@ -10,7 +10,7 @@ rust-version.workspace = true
 tokio = { workspace = true, features = ["rt-multi-thread", "macros"] }
 serde = { workspace = true, features = ["derive"] }
 anyhow = { workspace = true, features = [] }
-axum = { version = "0.7", features = [] }
+axum = { version = "0.7", features = ["json"] }
 sqlx = { version = "0.7", features = ["runtime-tokio-rustls", "any", "postgres"] }
 tracing = { version = "0.1", features = [] }
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
