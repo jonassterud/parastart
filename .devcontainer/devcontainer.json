@@ -28,7 +28,9 @@
 			]
 		}
 	},
+    "postCreateCommand": {
+        "sqlx": "cargo install sqlx-cli --no-default-features --features rustls,postgres"
+    },
 	"forwardPorts": [5050]
-	// "postCreateCommand": "uname -a",
 	// "remoteUser": "root"
 }
