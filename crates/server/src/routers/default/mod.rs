@@ -1,8 +1,6 @@
-mod root;
+use axum::Router;
+use tower_http::services::ServeDir;
 
-use axum::{routing::get, Router};
-use crate::error::ServerError;
-
-pub async fn router() -> Result<Router, ServerError> {
-    Ok(Router::new().route("/", get(root::get)))
+pub fn router() -> Router {
+    Router::new().nest_service("/", ServeDir::new("crates/www"))
 }
