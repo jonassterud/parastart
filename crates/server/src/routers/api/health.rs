@@ -1,15 +1,20 @@
 use anyhow::anyhow;
-use axum::extract::State;
+use axum::{routing::get, Extension, Router};
 use sqlx::PgPool;
 
 use super::version::Version;
 use crate::error::ServerError;
 
-pub async fn get(version: Version, State(pool): State<PgPool>) -> Result<String, ServerError> {
+pub fn router() -> Router {
+    Router::new().route("/api/:version/health", get(get_health))
+}
+
+async fn get_health(version: Version, pool: Extension<PgPool>) -> Result<String, ServerError> {
     if let Ok(_) = pool.acquire().await {
         Ok(format!("OK\n\nVersion: {:?}\nDatabase: OK", version))
     } else {
-        Err(ServerError::new(anyhow!("failed connecting to database")))
+        Err(ServerError::INTERNAL_SERVER_ERROR(anyhow!(
+            "failed connecting to database"
+        )))
     }
-    
 }

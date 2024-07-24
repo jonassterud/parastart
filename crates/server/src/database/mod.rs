@@ -1,13 +1,15 @@
-use std::time::Duration;
-use sqlx::{postgres::PgPoolOptions, PgPool};
-use crate::error::ServerError;
+pub mod auth;
+pub mod models;
 
-pub async fn get_pool() -> Result<PgPool, ServerError> {
-    let url = std::env::var("DATABASE_URL")
-        .unwrap_or_else(|_| "postgres://postgres:postgres@localhost".to_string());
-    let pool = PgPoolOptions::new()
-        .acquire_timeout(Duration::from_secs(3))
-        .connect(&url).await?;
+use crate::error::ServerError;
+use sqlx::{postgres::PgPoolOptions, PgPool};
+
+/// Create a connection pool to the database.
+pub async fn create_connection_pool() -> Result<PgPool, ServerError> {
+    let url = std::env::var("DATABASE_URL")?;
+    let pool = PgPoolOptions::new().connect(&url).await?;
+
+    sqlx::migrate!("src/database/migrations").run(&pool).await?;
 
     Ok(pool)
 }

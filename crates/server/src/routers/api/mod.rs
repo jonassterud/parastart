@@ -1,15 +1,14 @@
 mod health;
 mod takeoffs;
+mod users;
 mod version;
 
-use sqlx::PgPool;
-use crate::error::ServerError;
-use axum::{routing::get, Router};
+use axum::Router;
 
-pub async fn router() -> Result<Router<PgPool>, ServerError> {
-    let router = Router::new()
-        .route("/:version/health", get(health::get))
-        .route("/:version/takeoffs", get(takeoffs::get));
-
-    Ok(router)
+// RESTish
+pub fn router() -> Router {
+    Router::new()
+        .merge(users::router())
+        .merge(takeoffs::router())
+        .merge(health::router())
 }
