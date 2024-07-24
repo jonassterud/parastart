@@ -22,7 +22,7 @@ pub async fn run() -> Result<(), ServerError> {
     // Create listener and router
     let listener = tokio::net::TcpListener::bind("0.0.0.0:5050").await?;
     let random = Arc::new(Mutex::new(ChaCha8Rng::seed_from_u64(OsRng.next_u64())));
-    let pool = database::create_connection_pool().await?;
+    let pool = database::pool::connect().await?;
     let app = Router::new()
         .merge(routers::default::router())
         .merge(routers::api::router())
