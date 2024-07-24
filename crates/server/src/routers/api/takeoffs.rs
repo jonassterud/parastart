@@ -1,6 +1,6 @@
 use super::version::Version;
 use crate::{
-    database::models::{NewTakeoff, Takeoff},
+    database::models::{self, Takeoff},
     error::ServerError,
 };
 use axum::{
@@ -8,7 +8,7 @@ use axum::{
     Extension, Json, Router,
 };
 use sqlx::PgPool;
-use tracing::info;
+use std::time::SystemTime;
 
 pub fn router() -> Router {
     Router::new()
@@ -31,15 +31,28 @@ async fn get_takeoffs(
 async fn post_takeoffs(
     version: Version,
     pool: Extension<PgPool>,
-    Json(payload): Json<NewTakeoff>,
-) -> Result<String, ServerError> {
-    // let id: i32 = sqlx::query!(r#"
-    //         INSERT INTO takeoffs(body, picture, latitude, longitude, creation)
-    //         VALUES ($1, $2, $3, $4, $5)
-    //         RETURNING id
-    //     "#, payload.body, payload.picture, payload.latitude, payload.longitude).fetch_one(&pool);
+    Json(data): Json<models::Data<models::NewTakeoff>>,
+) -> Result<(), ServerError> {
+    let description = data.value.description;
+    let image = data.value.image;
+    let latitude = data.value.latitude;
+    let longitude = data.value.longitude;
+    let creation = SystemTime::now()
+        .duration_since(SystemTime::UNIX_EPOCH)?
+        .as_secs() as i64;
 
-    info!("{:?}", payload);
+    sqlx::query!(
+        r#"
+            INSERT INTO takeoffs(description, image, latitude, longitude, creation)
+            VALUES ($1, $2, $3, $4, $5)
+        "#,
+        description,
+        image,
+        latitude,
+        longitude,
+        creation
+    ).execute(&*pool)
+    .await?;
 
-    Ok(format!("OK\n\nVersion: {:?}", version))
+    Ok(())
 }

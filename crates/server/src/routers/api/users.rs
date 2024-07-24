@@ -1,10 +1,10 @@
-use std::sync::{Arc, Mutex};
 use crate::database::{auth, models};
 use crate::error::ServerError;
 use axum::routing::get;
 use axum::{routing::post, Extension, Json, Router};
 use rand_chacha::ChaCha8Rng;
 use sqlx::PgPool;
+use std::sync::{Arc, Mutex};
 
 use super::version::Version;
 

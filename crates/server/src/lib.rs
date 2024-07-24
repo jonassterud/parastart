@@ -4,10 +4,10 @@ mod routers;
 
 pub use error::ServerError;
 
-use std::sync::{Arc, Mutex};
 use axum::{Extension, Router};
 use rand::{RngCore, SeedableRng};
 use rand_chacha::{rand_core::OsRng, ChaCha8Rng};
+use std::sync::{Arc, Mutex};
 use tower_http::{cors::CorsLayer, trace::TraceLayer};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt, EnvFilter};
 
