@@ -51,7 +51,8 @@ async fn post_takeoffs(
         latitude,
         longitude,
         creation
-    ).execute(&*pool)
+    )
+    .execute(&*pool)
     .await?;
 
     Ok(())

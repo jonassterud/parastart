@@ -37,13 +37,13 @@ pub struct Takeoff {
 #[derive(Debug, Deserialize)]
 pub struct NewTakeoff {
     /// Optional image.
-    pub image: Option<Vec<u8>>, // BYTEA
+    pub image: Option<Vec<u8>>,
     /// Description.
-    pub description: String, // VARCHAR(2048)
+    pub description: String,
     /// Latitude coordinate.
-    pub latitude: f64, // DOUBLE PRECISION
+    pub latitude: f64,
     /// Longitude coordinate.
-    pub longitude: f64, // DOUBLE PRECISION
+    pub longitude: f64,
 }
 
 /// User model.
