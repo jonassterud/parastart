@@ -19,16 +19,22 @@ pub struct Data<T> {
 pub struct Takeoff {
     /// Incrementing ID.
     pub id: i32,
-    /// Optional image.
-    pub image: Option<Vec<u8>>,
+    /// String.
+    pub name: String,
     /// Description.
     pub description: String,
+    /// Optional image.
+    pub image: Option<Vec<u8>>,
+    /// Region.
+    pub region: String,
     /// Latitude coordinate.
     pub latitude: f64,
     /// Longitude coordinate.
     pub longitude: f64,
-    /// Creation date, as UNIX timestamp.
-    pub creation: i64,
+    /// Optional Holfuy URL.
+    pub holfuy_url: Option<String>,
+    /// Wind directions.
+    pub wind_directions: Vec<String>,
 }
 
 /// New takeoff model.
@@ -36,14 +42,22 @@ pub struct Takeoff {
 /// Used for creating new takeoffs.
 #[derive(Debug, Deserialize)]
 pub struct NewTakeoff {
-    /// Optional image.
-    pub image: Option<Vec<u8>>,
+    /// String.
+    pub name: String,
     /// Description.
     pub description: String,
+    /// Optional image.
+    pub image: Option<Vec<u8>>,
+    /// Region.
+    pub region: String,
     /// Latitude coordinate.
     pub latitude: f64,
     /// Longitude coordinate.
     pub longitude: f64,
+    /// Optional Holfuy URL.
+    pub holfuy_url: Option<String>,
+    /// Wind directions.
+    pub wind_directions: Vec<String>,
 }
 
 /// User model.

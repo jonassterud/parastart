@@ -2,8 +2,8 @@ mod database;
 mod error;
 mod routers;
 
-pub use error::ServerError;
 pub use database::models;
+pub use error::ServerError;
 
 use axum::{Extension, Router};
 use rand::{RngCore, SeedableRng};

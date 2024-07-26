@@ -8,7 +8,6 @@ use axum::{
     Extension, Json, Router,
 };
 use sqlx::PgPool;
-use std::time::SystemTime;
 
 pub fn router() -> Router {
     Router::new()
@@ -33,24 +32,28 @@ async fn post_takeoffs(
     pool: Extension<PgPool>,
     Json(data): Json<models::Data<models::NewTakeoff>>,
 ) -> Result<(), ServerError> {
+    let name = data.value.name;
     let description = data.value.description;
     let image = data.value.image;
+    let region = data.value.region;
     let latitude = data.value.latitude;
     let longitude = data.value.longitude;
-    let creation = SystemTime::now()
-        .duration_since(SystemTime::UNIX_EPOCH)?
-        .as_secs() as i64;
+    let holfuy_url = data.value.holfuy_url;
+    let wind_directions = &data.value.wind_directions;
 
     sqlx::query!(
         r#"
-            INSERT INTO takeoffs(description, image, latitude, longitude, creation)
-            VALUES ($1, $2, $3, $4, $5)
+            INSERT INTO takeoffs(name, description, image, region, latitude, longitude, holfuy_url, wind_directions)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
         "#,
+        name,
         description,
         image,
+        region,
         latitude,
         longitude,
-        creation
+        holfuy_url,
+        wind_directions
     )
     .execute(&*pool)
     .await?;

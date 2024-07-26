@@ -2101,6 +2101,7 @@ name = "scraper"
 version = "0.0.0"
 dependencies = [
  "anyhow",
+ "futures",
  "regex",
  "reqwest",
  "scraper 0.19.1",

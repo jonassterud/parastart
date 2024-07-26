@@ -10,6 +10,7 @@ rust-version.workspace = true
 server = { version = "*", path = "../server" }
 tokio = { workspace = true, features = ["rt-multi-thread", "macros"] }
 anyhow = { workspace = true, features = [] }
+futures = { workspace = true, features = [] }
 scraper = { version = "0.19", features = [] }
 soup = { version = "0.5", features = [] }
 thirtyfour = { version = "0.33", features = [] }

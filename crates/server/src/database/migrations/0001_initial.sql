@@ -1,12 +1,15 @@
 /* Takeoffs */
 
 CREATE TABLE IF NOT EXISTS "takeoffs" (
-    "id"            SERIAL PRIMARY KEY,
-    "image"         BYTEA,
-    "description"   VARCHAR(2048) NOT NULL,
-    "latitude"      DOUBLE PRECISION NOT NULL,
-    "longitude"     DOUBLE PRECISION NOT NULL,
-    "creation"      BIGINT NOT NULL
+    "id"                SERIAL PRIMARY KEY,
+    "name"              TEXT NOT NULL,
+    "description"       TEXT NOT NULL,
+    "image"             BYTEA,
+    "region"            TEXT NOT NULL,
+    "latitude"          DOUBLE PRECISION NOT NULL,
+    "longitude"         DOUBLE PRECISION NOT NULL,
+    "holfuy_url"        TEXT,
+    "wind_directions"   TEXT[] NOT NULL
 );
 
 /* Users, roles and sessions */
