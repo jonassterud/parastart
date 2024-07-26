@@ -1,6 +1,9 @@
 services:
   devcontainer:
-    image: mcr.microsoft.com/devcontainers/base:ubuntu
+    build:
+      context: .
+      dockerfile: Dockerfile
+    privileged: true
     environment:
       - DATABASE_URL=postgres://postgres:postgres@localhost
     volumes:
@@ -19,6 +22,11 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
       POSTGRES_DB: postgres
+
+  chromedriver:
+    image: robcherry/docker-chromedriver:latest
+    restart: unless-stopped
+    network_mode: service:db
 
 volumes:
   postgres-data:
