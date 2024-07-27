@@ -39,12 +39,11 @@ async fn scrape_takeoff(driver: &WebDriver, url: &str) -> Result<NewTakeoff, any
     driver.goto(url).await?;
     sleep(1);
     
-    // TODO: Actually check that "holfy_url" is a Holfuy URL
     let name = driver.find(By::Css("body > div > table:nth-child(2) > tbody > tr:nth-child(2) > td > table > tbody > tr:nth-child(3) > td > span")).await?;
     let description = driver.find(By::XPath("//td[contains(.,'Description')]/following-sibling::td")).await?;
     let image =  description.find(By::Css("a > img")).await.ok();
     let region = driver.find(By::XPath("//td[contains(.,'region')]/following-sibling::td")).await?;
-    let holfuy_url = driver.find(By::XPath("//td[contains(.,'Link to more info')]/following-sibling::td")).await?;
+    let holfuy_url = driver.find(By::XPath("//td[contains(.,'Link to more info')]/following-sibling::td[contains(.,'holfuy')]")).await?;
     let coordinates = driver.find(By::XPath("//td[contains(.,'Coordinates')]/following-sibling::td")).await?;
     let wind_directions = description.find(By::Css("img")).await.ok();
     let wind_directions = if let Some(e) = wind_directions { e.attr("alt").await?.unwrap_or_default().split(' ').map(|e| e.to_owned()).collect() } else { Vec::new() };
