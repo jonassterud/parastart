@@ -2109,6 +2109,8 @@ dependencies = [
  "soup",
  "thirtyfour",
  "tokio",
+ "tracing",
+ "tracing-subscriber",
 ]
 
 [[package]]

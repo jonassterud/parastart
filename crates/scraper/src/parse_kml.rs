@@ -2,8 +2,10 @@
 
 use anyhow::anyhow;
 use regex::Regex;
+use tracing::info;
 use std::fs;
 
+/// Get Flightlog URLs from a KML file at `path`.
 pub async fn get_urls(path: &str) -> Result<Vec<String>, anyhow::Error> {
     let mut out = Vec::new();
     let contents = fs::read_to_string(path)?;
@@ -20,6 +22,8 @@ pub async fn get_urls(path: &str) -> Result<Vec<String>, anyhow::Error> {
 
         out.push(url);
     }
+
+    info!("Found {} URLs from KML file.", out.len());
 
     Ok(out)
 }

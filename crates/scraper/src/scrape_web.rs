@@ -5,13 +5,16 @@ use regex::Regex;
 use server_lib::models::NewTakeoff;
 use thirtyfour::{error::WebDriverError, DesiredCapabilities, WebDriver};
 use thirtyfour::{By, ChromiumLikeCapabilities, WebElement};
+use tracing::{info, info_span};
 
+/// Scrape a list of takeoffs.
 pub async fn scrape_takeoffs(urls: &[String]) -> Result<Vec<NewTakeoff>, anyhow::Error> {
     let mut out = Vec::new();
     let driver = init_driver().await?;
-    sleep(1);
 
-    for url in urls {
+    for (i, url) in urls.iter().enumerate() {
+        info!("Scraping {} / {}", i + 1, urls.len());
+
         let takeoff = scrape_takeoff(&driver, url).await?;
         out.push(takeoff);
     }
@@ -19,6 +22,7 @@ pub async fn scrape_takeoffs(urls: &[String]) -> Result<Vec<NewTakeoff>, anyhow:
     Ok(out)
 }
 
+/// Initialize the web driver.
 async fn init_driver() -> Result<WebDriver, WebDriverError> {
     let mut caps = DesiredCapabilities::chrome();
     caps.set_no_sandbox()?;
@@ -27,10 +31,12 @@ async fn init_driver() -> Result<WebDriver, WebDriverError> {
     let driver = WebDriver::new("http://localhost:4444", caps).await?;
     driver.maximize_window().await?;
     driver.goto("https://flightlog.org/").await?;
+    sleep(1);
 
     Ok(driver)
 }
 
+/// Scrape a specific takeoff.
 #[rustfmt::skip]
 async fn scrape_takeoff(driver: &WebDriver, url: &str) -> Result<NewTakeoff, anyhow::Error> {
     sleep(1);
@@ -69,6 +75,7 @@ async fn scrape_takeoff(driver: &WebDriver, url: &str) -> Result<NewTakeoff, any
     })
 }
 
+/// Sleep for `secs` seconds.
 fn sleep(secs: u64) {
     std::thread::sleep(std::time::Duration::from_secs(secs));
 }
@@ -92,14 +99,6 @@ async fn as_png(driver: &WebDriver, element: Option<WebElement>) -> Result<Optio
 
 /// Convert a string of DMS coordinates to latitude and longitude.
 ///
-/// # Panics
-///
-/// Panics if Regex matching fails.
-///
-/// # Errors
-///
-/// This function will return an error if parsing fails.
-/// 
 /// # Returns
 /// 
 /// A tuple where the first value is the latitude and the second value is the longitude.
@@ -122,14 +121,6 @@ fn dms_to_dec(text: &str) -> Result<(f64, f64), anyhow::Error> {
 }
 
 /// Extract altitude info from a string.
-///
-/// # Panics
-///
-/// Panics if Regex matching fails.
-/// 
-/// # Errors
-///
-/// This function will return an error if .
 /// 
 /// # Returns
 /// 
