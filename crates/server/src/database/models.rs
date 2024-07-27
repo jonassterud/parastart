@@ -27,14 +27,24 @@ pub struct Takeoff {
     pub image: Option<Vec<u8>>,
     /// Region.
     pub region: String,
+    /// Optional meters over sea level
+    pub altitude: Option<i32>,
+    /// Optional difference between takeoff and landing in altitude.
+    pub altitude_diff: Option<i32>,
     /// Latitude coordinate.
     pub latitude: f64,
     /// Longitude coordinate.
     pub longitude: f64,
-    /// Optional Holfuy URL.
-    pub holfuy_url: Option<String>,
     /// Wind directions.
-    pub wind_directions: Vec<String>,
+    pub wind_dirs: Vec<String>,
+    /// Optional info URL.
+    pub info_url: Option<String>,
+    /// Optional source URL.
+    pub source_url: Option<String>,
+    /// Creation date and author name.
+    pub created: String,
+    /// Last update date and author name.
+    pub updated: String,
 }
 
 /// New takeoff model.
@@ -50,14 +60,24 @@ pub struct NewTakeoff {
     pub image: Option<Vec<u8>>,
     /// Region.
     pub region: String,
+    // Optional meters over sea level
+    pub altitude: Option<i32>,
+    /// Optional difference between takeoff and landing in altitude.
+    pub altitude_diff: Option<i32>,
     /// Latitude coordinate.
     pub latitude: f64,
     /// Longitude coordinate.
     pub longitude: f64,
-    /// Optional Holfuy URL.
-    pub holfuy_url: Option<String>,
     /// Wind directions.
-    pub wind_directions: Vec<String>,
+    pub wind_dirs: Vec<String>,
+    /// Optional info URL.
+    pub info_url: Option<String>,
+    /// Optional source URL.
+    pub source_url: Option<String>,
+    /// Creation date and author name.
+    pub created: String,
+    /// Last update date and author name.
+    pub updated: String,
 }
 
 /// User model.

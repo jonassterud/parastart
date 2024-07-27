@@ -6,10 +6,15 @@ CREATE TABLE IF NOT EXISTS "takeoffs" (
     "description"       TEXT NOT NULL,
     "image"             BYTEA,
     "region"            TEXT NOT NULL,
+    "altitude"          INTEGER,
+    "altitude_diff"     INTEGER,
     "latitude"          DOUBLE PRECISION NOT NULL,
     "longitude"         DOUBLE PRECISION NOT NULL,
-    "holfuy_url"        TEXT,
-    "wind_directions"   TEXT[] NOT NULL
+    "wind_dirs"         TEXT[] NOT NULL,
+    "info_url"          TEXT,
+    "source_url"        TEXT,
+    "created"           TEXT NOT NULL,
+    "updated"           TEXT NOT NULL
 );
 
 /* Users, roles and sessions */
