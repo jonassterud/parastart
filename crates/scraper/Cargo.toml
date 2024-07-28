@@ -1,0 +1,22 @@
+[package]
+name = "scraper"
+version.workspace = true
+authors.workspace = true
+repository.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+server = { version = "*", path = "../server" }
+tokio = { workspace = true, features = ["rt-multi-thread", "macros"] }
+anyhow = { workspace = true, features = [] }
+futures = { workspace = true, features = [] }
+sqlx = { workspace = true, features = ["postgres"] }
+tracing = { workspace = true, features = [] }
+tracing-subscriber = { workspace = true, features = ["env-filter"] }
+tracing-appender = { version = "0.2", features = [] }
+scraper = { version = "0.19", features = [] }
+soup = { version = "0.5", features = [] }
+thirtyfour = { version = "0.33", features = [] }
+reqwest = { version = "0.12", features = [] }
+regex = { version = "1.10", features = [] }
