@@ -1,11 +1,25 @@
-//! Parse KML files from flightlog.org
+#![deny(missing_docs)]
+
+//! Parse KML files from flightlog.org.
 
 use anyhow::anyhow;
 use regex::Regex;
 use std::fs;
 use tracing::info;
 
-/// Get Flightlog URLs from a KML file at `path`.
+/// Get Flightlog URLs from KML file.
+/// 
+/// # Arguments
+/// 
+/// * `path` - A filepath to a KML file from flightlog.org.
+/// 
+/// # Errors
+/// 
+/// This function will return an error if Regex or parsing fails.
+/// 
+/// # Returns
+/// 
+/// A list of URLs.
 pub async fn get_urls(path: &str) -> Result<Vec<String>, anyhow::Error> {
     let mut out = Vec::new();
     let contents = fs::read_to_string(path)?;

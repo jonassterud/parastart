@@ -1,4 +1,6 @@
-//! Scrape takeoffs from flightlog.org
+#![deny(missing_docs)]
+
+//! Scrape takeoffs from flightlog.org.
 
 use anyhow::anyhow;
 use futures::future::OptionFuture;
@@ -10,41 +12,79 @@ use thirtyfour::{error::WebDriverError, DesiredCapabilities, WebDriver};
 use thirtyfour::{By, ChromiumLikeCapabilities, WebElement};
 use tracing::{error, info};
 
-/// Scrape a list of takeoffs, as [`NewTakeoff`]'s, and save them to a database, `conn`.
+/// Seconds to wait before redirecting to a new URL.
+const PAGE_BEFORE_DELAY: u64 = 2;
+/// Seconds to wait before starting scraping after redirecting.
+const PAGE_SCRAPE_DELAY: u64 = 2;
+
+
+/// Scrape takeoffs and save them to the database.
+///
+/// # Arguments
+/// 
+/// * `urls` - A list of URLs to scrape.
+/// * `conn` - A connection to the Postgres database.
+/// 
+/// # Errors
+///
+/// This function will return an error if initializing the chrome driver fails.
+/// All other errors are logged.
 #[rustfmt::skip]
-pub async fn try_scrape_all(conn: &mut PgConnection, urls: &[String]) -> Result<(), anyhow::Error> {
+pub async fn try_scrape_all(urls: &[String], conn: &mut PgConnection, ) -> Result<(), anyhow::Error> {
     let driver = init_driver().await?;
 
     for (i, url) in urls.iter().enumerate() {
         info!("Scraping {} / {}", i + 1, urls.len());
-        try_scrape_and_insert(conn, url, &driver).await.map_err(|err| error!("{err}")).ok();
+        try_scrape_and_insert(url, conn, &driver).await.map_err(|err| error!("{err}")).ok();
     }
 
     Ok(())
 }
 
-/// Try scraping a takeoff and insert into database.
-async fn try_scrape_and_insert(
-    conn: &mut PgConnection,
-    url: &str,
-    driver: &WebDriver,
-) -> Result<(), anyhow::Error> {
-    let takeoff = scrape_takeoff(&driver, url).await?;
+
+/// Try scraping a takeoff and save to the database.
+///
+/// # Arguments
+/// 
+/// * `url` - A URL to scrape.
+/// * `conn` - A connection to the Postgres database.
+/// * `driver` - A Chrome driver.
+/// 
+/// # Errors
+///
+/// This function will return an error if scraping or inserting fails.
+#[rustfmt::skip]
+async fn try_scrape_and_insert(url: &str, conn: &mut PgConnection, driver: &WebDriver) -> Result<(), anyhow::Error> {
+    let takeoff = scrape_takeoff(url, &driver).await?;
     helpers::insert_takeoff(&mut *conn, &takeoff).await?;
 
     Ok(())
 }
 
-/// Scrape a specific takeoff.
+
+/// Scrape a takeoff.
+///
+/// # Arguments
+/// 
+/// * `url` - A URL to scrape.
+/// * `driver` - A Chrome driver.
+/// 
+/// # Errors
+///
+/// This function will return an error if any part of the scraping fails.
+/// 
+/// # Returns
+/// 
+/// A [`NewTakeoff`].
 #[rustfmt::skip]
-async fn scrape_takeoff(driver: &WebDriver, url: &str) -> Result<NewTakeoff, anyhow::Error> {
-    sleep(2);
+async fn scrape_takeoff(url: &str, driver: &WebDriver) -> Result<NewTakeoff, anyhow::Error> {
+    sleep(PAGE_BEFORE_DELAY);
     driver.goto(url).await?;
-    sleep(2);
+    sleep(PAGE_SCRAPE_DELAY);
     
     let name = driver.find(By::Css("body > div > table:nth-child(2) > tbody > tr:nth-child(2) > td > table > tbody > tr:nth-child(3) > td > span")).await?.text().await?;
     let description = driver.find(By::XPath("//td[contains(.,'Description')]/following-sibling::td")).await?;
-    let image = OptionFuture::from(description.find(By::Css("a > img")).await.ok().map(|element| as_png(driver, element))).await.transpose()?;
+    let image = OptionFuture::from(description.find(By::Css("a > img")).await.ok().map(|element| as_png(element, driver))).await.transpose()?;
     let region = driver.find(By::XPath("//td[contains(.,'region')]/following-sibling::td")).await?.text().await?;
     let (altitude, altitude_diff) = extract_altitude_info(&driver.find(By::XPath("//td[contains(.,'Altitude')]/following-sibling::td")).await?.text().await?)?;
     let (latitude, longitude) = dms_to_dec(&driver.find(By::XPath("//td[contains(.,'Coordinates')]/following-sibling::td")).await?.text().await?)?;
@@ -74,17 +114,32 @@ async fn scrape_takeoff(driver: &WebDriver, url: &str) -> Result<NewTakeoff, any
     })
 }
 
-/// Sleep for `secs` seconds.
+/// Sleep in the current thread.
+/// 
+/// # Arguments
+/// 
+/// * `secs` - Amount of seconds to sleep.
+#[rustfmt::skip]
 fn sleep(secs: u64) {
     std::thread::sleep(std::time::Duration::from_secs(secs));
 }
 
 /// Opens image in a new window and takes a screenshot.
+/// 
+/// # Arguments
+/// 
+/// * `element` - The `img` element, where the parent element is an element with the `href` attribute to the source.
+/// * `driver` - A Chrome driver.
+/// 
+/// # Errors
+///
+/// This function will return an error if it can't find the image source or there's a driver issue.
+/// 
+/// # Returns
+/// 
+/// A PNG image in bytes.
 #[rustfmt::skip]
-async fn as_png(
-    driver: &WebDriver,
-    element: WebElement,
-) -> Result<Vec<u8>, anyhow::Error> {
+async fn as_png(element: WebElement, driver: &WebDriver) -> Result<Vec<u8>, anyhow::Error> {
     let source = element.parent().await?.attr("href").await?.ok_or(anyhow!("missing image source"))?;
     let image = driver.in_new_tab(|| async {
         driver.goto(source).await?;
@@ -96,6 +151,14 @@ async fn as_png(
 
 /// Convert a string of DMS coordinates to latitude and longitude.
 ///
+/// # Arguments
+/// 
+/// `text` - DMS coordinates (e.g. `DMS: N 60° 38' 44''  E 6° 24' 28''`).
+/// 
+/// # Errors
+///
+/// This function will return an error if Regex or parsing fails.
+/// 
 /// # Returns
 /// 
 /// A tuple where the first value is the latitude and the second value is the longitude.
@@ -119,6 +182,14 @@ fn dms_to_dec(text: &str) -> Result<(f64, f64), anyhow::Error> {
 
 /// Extract altitude info from a string.
 /// 
+/// # Arguments
+/// 
+/// * `text` - Latitude string (e.g. `	790 meters asl Top to bottom 740 meters`).
+/// 
+/// # Errors
+///
+/// This function will return an error if Regex or parsing fails.
+/// 
 /// # Returns
 /// 
 /// A tuple where the first value is the altitude and the second value is the altitude difference.
@@ -133,7 +204,15 @@ fn extract_altitude_info(text: &str) -> Result<(Option<i32>, Option<i32>), anyho
     Ok((altitude, altitude_diff))
 }
 
-/// Initialize the web driver.
+/// Initialize and configure the web driver.
+/// 
+/// # Errors
+/// 
+///  This function will return an error if initialization fails.
+/// 
+/// # Returns
+/// 
+/// A Chrome driver.
 async fn init_driver() -> Result<WebDriver, WebDriverError> {
     let mut caps = DesiredCapabilities::chrome();
     caps.set_no_sandbox()?;
