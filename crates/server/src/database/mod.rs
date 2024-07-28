@@ -1,3 +1,4 @@
 pub mod auth;
-pub mod models;
 pub mod connection;
+pub mod helpers;
+pub mod models;

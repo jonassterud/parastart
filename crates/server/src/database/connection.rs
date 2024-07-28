@@ -1,5 +1,5 @@
 use crate::error::ServerError;
-use sqlx::{Connection, postgres::PgPoolOptions, PgPool, PgConnection};
+use sqlx::{postgres::PgPoolOptions, Connection, PgConnection, PgPool};
 
 /// Create a connection pool to the database.
 pub async fn pool() -> Result<PgPool, ServerError> {

@@ -2,8 +2,9 @@ mod database;
 mod error;
 mod routers;
 
-pub use database::models;
 pub use database::connection;
+pub use database::helpers;
+pub use database::models;
 pub use error::ServerError;
 
 use axum::{Extension, Router};

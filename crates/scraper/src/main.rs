@@ -2,16 +2,25 @@ mod parse_kml;
 mod scrape_web;
 
 use anyhow::anyhow;
-use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt, EnvFilter};
 use server_lib::connection;
+use std::time::{SystemTime, UNIX_EPOCH};
+use tracing_subscriber::{fmt, layer::SubscriberExt, util::SubscriberInitExt, EnvFilter};
 
 #[tokio::main]
 async fn main() -> Result<(), anyhow::Error> {
-    // Set up tracing subscriber
+    // Set up log files
+    let timestamp = SystemTime::now().duration_since(UNIX_EPOCH)?.as_secs();
+    let log_file_name = format!("scraper_{timestamp}.log");
+    let file_appender = tracing_appender::rolling::never("logs", log_file_name);
+    let (appender, _guard) = tracing_appender::non_blocking(file_appender);
+
+    // Set up logging
     const DEFAULT_FILTER: &str = "scraper=debug";
     tracing_subscriber::registry()
         .with(EnvFilter::try_from_default_env().unwrap_or_else(|_| DEFAULT_FILTER.into()))
         .with(tracing_subscriber::fmt::layer())
+        .with(fmt::layer().pretty().with_writer(std::io::stdout))
+        .with(fmt::layer().with_ansi(false).with_writer(appender))
         .init();
 
     // Gather URLs
@@ -22,7 +31,7 @@ async fn main() -> Result<(), anyhow::Error> {
     let mut connection = connection::single().await.map_err(|e| anyhow!(e))?;
 
     // Scrape URLs and insert into database
-    scrape_web::scrape_takeoffs(&mut connection, &urls).await?;
+    scrape_web::try_scrape_all(&mut connection, &urls).await?;
 
     Ok(())
 }
