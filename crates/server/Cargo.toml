@@ -16,8 +16,8 @@ serde = { workspace = true, features = ["derive"] }
 anyhow = { workspace = true, features = [] }
 tracing = { workspace = true, features = [] }
 tracing-subscriber = { workspace = true, features = ["env-filter"] }
+sqlx = { workspace = true, features = ["runtime-tokio-rustls", "any", "postgres"] }
 axum = { version = "0.7", features = ["tracing", "json", "macros"] }
-sqlx = { version = "0.7", features = ["runtime-tokio-rustls", "any", "postgres"] }
 tower-http = { version = "0.5", features = ["trace", "cors", "fs"] }
 rand = { version = "0.8", features = [] }
 rand_chacha = { version = "0.3", features = [] }

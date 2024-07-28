@@ -13,6 +13,7 @@ anyhow = { workspace = true, features = [] }
 futures = { workspace = true, features = [] }
 tracing = { workspace = true, features = [] }
 tracing-subscriber = { workspace = true, features = ["env-filter"] }
+sqlx = { workspace = true, features = ["postgres"] }
 scraper = { version = "0.19", features = [] }
 soup = { version = "0.5", features = [] }
 thirtyfour = { version = "0.33", features = [] }

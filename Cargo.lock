@@ -2107,6 +2107,7 @@ dependencies = [
  "scraper 0.19.1",
  "server",
  "soup",
+ "sqlx",
  "thirtyfour",
  "tokio",
  "tracing",

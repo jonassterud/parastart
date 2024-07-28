@@ -3,23 +3,43 @@
 use anyhow::anyhow;
 use regex::Regex;
 use server_lib::models::NewTakeoff;
+use sqlx::PgConnection;
 use thirtyfour::{error::WebDriverError, DesiredCapabilities, WebDriver};
 use thirtyfour::{By, ChromiumLikeCapabilities, WebElement};
-use tracing::{info, info_span};
+use tracing::info;
 
-/// Scrape a list of takeoffs.
-pub async fn scrape_takeoffs(urls: &[String]) -> Result<Vec<NewTakeoff>, anyhow::Error> {
-    let mut out = Vec::new();
+/// Scrape a list of takeoffs, as [`NewTakeoff`]'s, and save them to a database, `db`.
+pub async fn scrape_takeoffs(db: &mut PgConnection, urls: &[String]) -> Result<(), anyhow::Error> {
     let driver = init_driver().await?;
 
     for (i, url) in urls.iter().enumerate() {
         info!("Scraping {} / {}", i + 1, urls.len());
 
         let takeoff = scrape_takeoff(&driver, url).await?;
-        out.push(takeoff);
+        sqlx::query!(
+            r#"
+                INSERT INTO takeoffs(name, description, image, region, altitude, altitude_diff, latitude, longitude, wind_dirs, info_url, source_url, created, updated)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+            "#,
+            takeoff.name,
+            takeoff.description,
+            takeoff.image,
+            takeoff.region,
+            takeoff.altitude,
+            takeoff.altitude_diff,
+            takeoff.latitude,
+            takeoff.longitude,
+            &takeoff.wind_dirs,
+            takeoff.info_url,
+            takeoff.source_url,
+            takeoff.created,
+            takeoff.updated,
+        )
+        .execute(&mut *db)
+        .await?;
     }
 
-    Ok(out)
+    Ok(())
 }
 
 /// Initialize the web driver.

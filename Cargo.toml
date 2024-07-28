@@ -18,3 +18,4 @@ serde = { version = "1.0" }
 anyhow = { version = "1.0" }
 tracing = { version = "0.1" }
 tracing-subscriber = { version = "0.3" }
+sqlx = { version = "0.7" }
