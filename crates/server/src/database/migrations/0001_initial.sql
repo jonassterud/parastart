@@ -2,7 +2,7 @@
 
 CREATE TABLE IF NOT EXISTS "takeoffs" (
     "id"                SERIAL PRIMARY KEY,
-    "name"              TEXT NOT NULL,
+    "name"              TEXT UNIQUE NOT NULL,
     "description"       TEXT NOT NULL,
     "image"             BYTEA,
     "region"            TEXT NOT NULL,
