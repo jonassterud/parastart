@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS "takeoffs" (
 
 CREATE TABLE IF NOT EXISTS "users" (
     "id"        SERIAL PRIMARY KEY,
-    "username"  VARCHAR(30) NOT NULL UNIQUE,
+    "username"  TEXT NOT NULL UNIQUE,
     "password"  TEXT NOT NULL   
 );
 
