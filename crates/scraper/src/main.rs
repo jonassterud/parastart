@@ -24,12 +24,12 @@ async fn main() -> Result<(), anyhow::Error> {
         .with(fmt::layer().with_ansi(false).with_writer(appender))
         .init();
 
-    // Gather URLs
-    let path = "crates/scraper/resources/country_160.kml";
-    let urls = parse_kml::get_urls(path).await?;
-
     // Connect to database
     let mut connection = connection::single().await.map_err(|e| anyhow!(e))?;
+
+    // Gather URLs
+    let path = "crates/scraper/resources/country_160.kml";
+    let urls = parse_kml::get_missing_urls(path, &mut connection).await?;
 
     // Scrape URLs and insert into database
     scrape_web::try_scrape_all(urls, &mut connection).await?;

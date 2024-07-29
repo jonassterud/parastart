@@ -22,7 +22,7 @@ const PAGE_SCRAPE_DELAY: u64 = 2;
 ///
 /// # Arguments
 /// 
-/// * `urls` - A list of URLs to scrape (ignores already existing).
+/// * `urls` - A list of URLs to scrape.
 /// * `conn` - A connection to the Postgres database.
 /// 
 /// # Errors
@@ -30,16 +30,12 @@ const PAGE_SCRAPE_DELAY: u64 = 2;
 /// This function will return an error if initializing the chrome driver fails.
 /// All other errors are logged.
 #[rustfmt::skip]
-pub async fn try_scrape_all(urls: Vec<String>, conn: &mut PgConnection, ) -> Result<(), anyhow::Error> {
+pub async fn try_scrape_all(urls: Vec<String>, conn: &mut PgConnection) -> Result<(), anyhow::Error> {
     let driver = init_driver().await?;
-    let existing_urls = helpers::get_source_urls(&mut *conn).await?;
-    let urls_iter = urls.into_iter().filter(|url| !existing_urls.contains(url)).enumerate();
-    let urls_iter_count = urls_iter.clone().count();
 
-    info!("Found {} matching takeoffs in database, skipping.", existing_urls.len());
-    for (i, url) in urls_iter {
-        info!("Scraping {} / {}", i + 1, urls_iter_count);
-        try_scrape_and_insert(&url, conn, &driver).await.map_err(|err| error!("{err}")).ok();
+    for (i, url) in urls.iter().enumerate() {
+        info!("Scraping {} / {}", i + 1, urls.len());
+        try_scrape_and_insert(&url, conn, &driver).await.map_err(|err| error!("{url}: {err}")).ok();
     }
 
     Ok(())
@@ -145,12 +141,11 @@ fn sleep(secs: u64) {
 #[rustfmt::skip]
 async fn as_png(element: WebElement, driver: &WebDriver) -> Result<Vec<u8>, anyhow::Error> {
     let source = element.parent().await?.attr("href").await?.ok_or(anyhow!("missing image source"))?;
-    let image = driver.in_new_tab(|| async {
+
+    driver.in_new_tab(|| async {
         driver.goto(source).await?;
         driver.find(By::Css("img")).await?.screenshot_as_png().await
-    }).await?;
-
-    Ok(image)
+    }).await.map_err(|err| anyhow!("{err}"))
 }
 
 /// Convert a string of DMS coordinates to latitude and longitude.
