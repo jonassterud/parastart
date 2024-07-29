@@ -32,7 +32,7 @@ async fn main() -> Result<(), anyhow::Error> {
     let mut connection = connection::single().await.map_err(|e| anyhow!(e))?;
 
     // Scrape URLs and insert into database
-    scrape_web::try_scrape_all(&urls, &mut connection).await?;
+    scrape_web::try_scrape_all(urls, &mut connection).await?;
     info!("Exiting.");
     
     Ok(())

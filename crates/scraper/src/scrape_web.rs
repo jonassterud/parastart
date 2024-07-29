@@ -22,7 +22,7 @@ const PAGE_SCRAPE_DELAY: u64 = 2;
 ///
 /// # Arguments
 /// 
-/// * `urls` - A list of URLs to scrape.
+/// * `urls` - A list of URLs to scrape (ignores already existing).
 /// * `conn` - A connection to the Postgres database.
 /// 
 /// # Errors
@@ -30,12 +30,16 @@ const PAGE_SCRAPE_DELAY: u64 = 2;
 /// This function will return an error if initializing the chrome driver fails.
 /// All other errors are logged.
 #[rustfmt::skip]
-pub async fn try_scrape_all(urls: &[String], conn: &mut PgConnection, ) -> Result<(), anyhow::Error> {
+pub async fn try_scrape_all(urls: Vec<String>, conn: &mut PgConnection, ) -> Result<(), anyhow::Error> {
     let driver = init_driver().await?;
+    let existing_urls = helpers::get_source_urls(&mut *conn).await?;
+    let urls_iter = urls.into_iter().filter(|url| !existing_urls.contains(url)).enumerate();
+    let urls_iter_count = urls_iter.clone().count();
 
-    for (i, url) in urls.iter().enumerate() {
-        info!("Scraping {} / {}", i + 1, urls.len());
-        try_scrape_and_insert(url, conn, &driver).await.map_err(|err| error!("{err}")).ok();
+    info!("Found {} matching takeoffs in database, skipping.", existing_urls.len());
+    for (i, url) in urls_iter {
+        info!("Scraping {} / {}", i + 1, urls_iter_count);
+        try_scrape_and_insert(&url, conn, &driver).await.map_err(|err| error!("{err}")).ok();
     }
 
     Ok(())
