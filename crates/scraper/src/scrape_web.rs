@@ -88,7 +88,7 @@ async fn scrape_takeoff(url: &str, driver: &WebDriver) -> Result<NewTakeoff, any
     
     let name = driver.find(By::Css("body > div > table:nth-child(2) > tbody > tr:nth-child(2) > td > table > tbody > tr:nth-child(3) > td > span")).await?.text().await?;
     let description = driver.find(By::XPath("//td[contains(.,'Description')]/following-sibling::td")).await?;
-    let image = OptionFuture::from(description.find(By::Css("a > img")).await.ok().map(|element| as_png(element, driver))).await.transpose()?;
+    let image = OptionFuture::from(description.find(By::Css("a > img")).await.ok().map(|element| as_png(element, driver))).await.transpose().ok().flatten();
     let region = driver.find(By::XPath("//td[contains(.,'region')]/following-sibling::td")).await?.text().await?;
     let (altitude, altitude_diff) = extract_altitude_info(&driver.find(By::XPath("//td[contains(.,'Altitude')]/following-sibling::td")).await?.text().await?)?;
     let (latitude, longitude) = dms_to_dec(&driver.find(By::XPath("//td[contains(.,'Coordinates')]/following-sibling::td")).await?.text().await?)?;
