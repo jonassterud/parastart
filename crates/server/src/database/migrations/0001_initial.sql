@@ -2,7 +2,7 @@
 
 CREATE TABLE IF NOT EXISTS "takeoffs" (
     "id"                SERIAL PRIMARY KEY,
-    "name"              TEXT UNIQUE NOT NULL,
+    "name"              TEXT NOT NULL,
     "description"       TEXT NOT NULL,
     "image"             BYTEA,
     "region"            TEXT NOT NULL,
@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS "takeoffs" (
     "longitude"         DOUBLE PRECISION NOT NULL,
     "wind_dirs"         TEXT[] NOT NULL,
     "info_url"          TEXT,
-    "source_url"        TEXT,
+    "source_url"        TEXT UNIQUE,
     "created"           TEXT NOT NULL,
     "updated"           TEXT NOT NULL
 );
@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS "takeoffs" (
 
 CREATE TABLE IF NOT EXISTS "users" (
     "id"        SERIAL PRIMARY KEY,
-    "username"  VARCHAR(30) NOT NULL UNIQUE,
+    "username"  TEXT NOT NULL UNIQUE,
     "password"  TEXT NOT NULL   
 );
 

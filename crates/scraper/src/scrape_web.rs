@@ -30,12 +30,12 @@ const PAGE_SCRAPE_DELAY: u64 = 2;
 /// This function will return an error if initializing the chrome driver fails.
 /// All other errors are logged.
 #[rustfmt::skip]
-pub async fn try_scrape_all(urls: &[String], conn: &mut PgConnection, ) -> Result<(), anyhow::Error> {
+pub async fn try_scrape_all(urls: Vec<String>, conn: &mut PgConnection) -> Result<(), anyhow::Error> {
     let driver = init_driver().await?;
 
     for (i, url) in urls.iter().enumerate() {
         info!("Scraping {} / {}", i + 1, urls.len());
-        try_scrape_and_insert(url, conn, &driver).await.map_err(|err| error!("{err}")).ok();
+        try_scrape_and_insert(&url, conn, &driver).await.map_err(|err| error!("{url}: {err}")).ok();
     }
 
     Ok(())
@@ -84,7 +84,7 @@ async fn scrape_takeoff(url: &str, driver: &WebDriver) -> Result<NewTakeoff, any
     
     let name = driver.find(By::Css("body > div > table:nth-child(2) > tbody > tr:nth-child(2) > td > table > tbody > tr:nth-child(3) > td > span")).await?.text().await?;
     let description = driver.find(By::XPath("//td[contains(.,'Description')]/following-sibling::td")).await?;
-    let image = OptionFuture::from(description.find(By::Css("a > img")).await.ok().map(|element| as_png(element, driver))).await.transpose()?;
+    let image = OptionFuture::from(description.find(By::Css("a > img")).await.ok().map(|element| as_png(element, driver))).await.transpose().ok().flatten();
     let region = driver.find(By::XPath("//td[contains(.,'region')]/following-sibling::td")).await?.text().await?;
     let (altitude, altitude_diff) = extract_altitude_info(&driver.find(By::XPath("//td[contains(.,'Altitude')]/following-sibling::td")).await?.text().await?)?;
     let (latitude, longitude) = dms_to_dec(&driver.find(By::XPath("//td[contains(.,'Coordinates')]/following-sibling::td")).await?.text().await?)?;
@@ -141,12 +141,11 @@ fn sleep(secs: u64) {
 #[rustfmt::skip]
 async fn as_png(element: WebElement, driver: &WebDriver) -> Result<Vec<u8>, anyhow::Error> {
     let source = element.parent().await?.attr("href").await?.ok_or(anyhow!("missing image source"))?;
-    let image = driver.in_new_tab(|| async {
+
+    driver.in_new_tab(|| async {
         driver.goto(source).await?;
         driver.find(By::Css("img")).await?.screenshot_as_png().await
-    }).await?;
-
-    Ok(image)
+    }).await.map_err(|err| anyhow!("{err}"))
 }
 
 /// Convert a string of DMS coordinates to latitude and longitude.
