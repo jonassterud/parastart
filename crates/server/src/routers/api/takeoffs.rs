@@ -1,6 +1,9 @@
 use super::version::Version;
 use crate::{
-    database::models::{self, Takeoff},
+    database::{
+        helpers,
+        models::{self, Takeoff},
+    },
     error::ServerError,
 };
 use axum::{
@@ -8,7 +11,6 @@ use axum::{
     Extension, Json, Router,
 };
 use sqlx::PgPool;
-use std::time::SystemTime;
 
 pub fn router() -> Router {
     Router::new()
@@ -33,26 +35,7 @@ async fn post_takeoffs(
     pool: Extension<PgPool>,
     Json(data): Json<models::Data<models::NewTakeoff>>,
 ) -> Result<(), ServerError> {
-    let description = data.value.description;
-    let image = data.value.image;
-    let latitude = data.value.latitude;
-    let longitude = data.value.longitude;
-    let creation = SystemTime::now()
-        .duration_since(SystemTime::UNIX_EPOCH)?
-        .as_secs() as i64;
-
-    sqlx::query!(
-        r#"
-            INSERT INTO takeoffs(description, image, latitude, longitude, creation)
-            VALUES ($1, $2, $3, $4, $5)
-        "#,
-        description,
-        image,
-        latitude,
-        longitude,
-        creation
-    ).execute(&*pool)
-    .await?;
+    helpers::insert_takeoff(&*pool, &data.value).await?;
 
     Ok(())
 }

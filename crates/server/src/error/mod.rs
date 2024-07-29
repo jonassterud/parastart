@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 use axum::http::StatusCode;
 use axum::response::{IntoResponse, Response};
 
@@ -98,5 +100,11 @@ where
 {
     fn from(error: E) -> Self {
         Self::new(error, StatusCode::INTERNAL_SERVER_ERROR)
+    }
+}
+
+impl Display for ServerError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Error {}: {}", self.status, self.error)
     }
 }

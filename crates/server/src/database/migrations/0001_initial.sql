@@ -1,19 +1,27 @@
 /* Takeoffs */
 
 CREATE TABLE IF NOT EXISTS "takeoffs" (
-    "id"            SERIAL PRIMARY KEY,
-    "image"         BYTEA,
-    "description"   VARCHAR(2048) NOT NULL,
-    "latitude"      DOUBLE PRECISION NOT NULL,
-    "longitude"     DOUBLE PRECISION NOT NULL,
-    "creation"      BIGINT NOT NULL
+    "id"                SERIAL PRIMARY KEY,
+    "name"              TEXT NOT NULL,
+    "description"       TEXT NOT NULL,
+    "image"             BYTEA,
+    "region"            TEXT NOT NULL,
+    "altitude"          INTEGER,
+    "altitude_diff"     INTEGER,
+    "latitude"          DOUBLE PRECISION NOT NULL,
+    "longitude"         DOUBLE PRECISION NOT NULL,
+    "wind_dirs"         TEXT[] NOT NULL,
+    "info_url"          TEXT,
+    "source_url"        TEXT UNIQUE,
+    "created"           TEXT NOT NULL,
+    "updated"           TEXT NOT NULL
 );
 
 /* Users, roles and sessions */
 
 CREATE TABLE IF NOT EXISTS "users" (
     "id"        SERIAL PRIMARY KEY,
-    "username"  VARCHAR(30) NOT NULL UNIQUE,
+    "username"  TEXT NOT NULL UNIQUE,
     "password"  TEXT NOT NULL   
 );
 

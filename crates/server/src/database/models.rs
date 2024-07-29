@@ -19,16 +19,32 @@ pub struct Data<T> {
 pub struct Takeoff {
     /// Incrementing ID.
     pub id: i32,
-    /// Optional image.
-    pub image: Option<Vec<u8>>,
+    /// String.
+    pub name: String,
     /// Description.
     pub description: String,
+    /// Optional image.
+    pub image: Option<Vec<u8>>,
+    /// Region.
+    pub region: String,
+    /// Optional meters over sea level
+    pub altitude: Option<i32>,
+    /// Optional difference between takeoff and landing in altitude.
+    pub altitude_diff: Option<i32>,
     /// Latitude coordinate.
     pub latitude: f64,
     /// Longitude coordinate.
     pub longitude: f64,
-    /// Creation date, as UNIX timestamp.
-    pub creation: i64,
+    /// Wind directions.
+    pub wind_dirs: Vec<String>,
+    /// Optional info URL.
+    pub info_url: Option<String>,
+    /// Optional source URL.
+    pub source_url: Option<String>,
+    /// Creation date and author name.
+    pub created: String,
+    /// Last update date and author name.
+    pub updated: String,
 }
 
 /// New takeoff model.
@@ -36,14 +52,32 @@ pub struct Takeoff {
 /// Used for creating new takeoffs.
 #[derive(Debug, Deserialize)]
 pub struct NewTakeoff {
-    /// Optional image.
-    pub image: Option<Vec<u8>>, // BYTEA
+    /// String.
+    pub name: String,
     /// Description.
-    pub description: String, // VARCHAR(2048)
+    pub description: String,
+    /// Optional image.
+    pub image: Option<Vec<u8>>,
+    /// Region.
+    pub region: String,
+    // Optional meters over sea level
+    pub altitude: Option<i32>,
+    /// Optional difference between takeoff and landing in altitude.
+    pub altitude_diff: Option<i32>,
     /// Latitude coordinate.
-    pub latitude: f64, // DOUBLE PRECISION
+    pub latitude: f64,
     /// Longitude coordinate.
-    pub longitude: f64, // DOUBLE PRECISION
+    pub longitude: f64,
+    /// Wind directions.
+    pub wind_dirs: Vec<String>,
+    /// Optional info URL.
+    pub info_url: Option<String>,
+    /// Optional source URL.
+    pub source_url: Option<String>,
+    /// Creation date and author name.
+    pub created: String,
+    /// Last update date and author name.
+    pub updated: String,
 }
 
 /// User model.

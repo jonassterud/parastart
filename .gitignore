@@ -2,3 +2,5 @@
 **/target/
 **/*.rs.bk
 **/*.pdb
+**/logs
+**/backups/*dump.sql
