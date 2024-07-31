@@ -34,8 +34,13 @@ pub async fn get_source_urls<'a, E>(executor: E) -> Result<Vec<String>, sqlx::Er
 where
     E: Executor<'a, Database = Postgres>,
 {
-    let records = sqlx::query!(r#"SELECT source_url FROM takeoffs"#).fetch_all(executor).await?;
-    let out = records.into_iter().filter_map(|record| record.source_url).collect();
+    let records = sqlx::query!(r#"SELECT source_url FROM takeoffs"#)
+        .fetch_all(executor)
+        .await?;
+    let out = records
+        .into_iter()
+        .filter_map(|record| record.source_url)
+        .collect();
 
     Ok(out)
 }

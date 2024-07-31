@@ -17,7 +17,6 @@ const PAGE_BEFORE_DELAY: u64 = 2;
 /// Seconds to wait before starting scraping after redirecting.
 const PAGE_SCRAPE_DELAY: u64 = 2;
 
-
 /// Scrape takeoffs and save them to the database.
 ///
 /// # Arguments
@@ -41,7 +40,6 @@ pub async fn try_scrape_all(urls: Vec<String>, conn: &mut PgConnection) -> Resul
     Ok(())
 }
 
-
 /// Try scraping a takeoff and save to the database.
 ///
 /// # Arguments
@@ -60,7 +58,6 @@ async fn try_scrape_and_insert(url: &str, conn: &mut PgConnection, driver: &WebD
 
     Ok(())
 }
-
 
 /// Scrape a takeoff.
 ///
@@ -204,13 +201,13 @@ fn extract_altitude_info(text: &str) -> Result<(Option<i32>, Option<i32>), anyho
 }
 
 /// Initialize and configure the web driver.
-/// 
+///
 /// # Errors
-/// 
+///
 ///  This function will return an error if initialization fails.
-/// 
+///
 /// # Returns
-/// 
+///
 /// A Chrome driver.
 async fn init_driver() -> Result<WebDriver, WebDriverError> {
     let mut caps = DesiredCapabilities::chrome();

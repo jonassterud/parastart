@@ -3,8 +3,8 @@ mod scrape_web;
 
 use anyhow::anyhow;
 use server_lib::connection;
-use tracing::info;
 use std::time::{SystemTime, UNIX_EPOCH};
+use tracing::info;
 use tracing_subscriber::{fmt, layer::SubscriberExt, util::SubscriberInitExt, EnvFilter};
 
 #[tokio::main]
@@ -34,6 +34,6 @@ async fn main() -> Result<(), anyhow::Error> {
     // Scrape URLs and insert into database
     scrape_web::try_scrape_all(urls, &mut connection).await?;
     info!("Exiting.");
-    
+
     Ok(())
 }
