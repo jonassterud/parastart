@@ -34,8 +34,13 @@ async function fetch_takeoff(id) {
 
         const response = await fetch(path);
         const json = await response.json();
+        const takeoff = json.at(0);
 
-        return json.at(0);
+        if (takeoff === undefined) {
+            throw new Error("takeoff is undefined");
+        }
+
+        return takeoff;
     } catch (error) {
         throw error;
     }

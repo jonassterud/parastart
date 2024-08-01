@@ -1,0 +1,39 @@
+#titles {
+    display: flex;
+    flex-direction: column;
+}
+
+#region {
+    color: inherit;
+    opacity: 0.75;
+    font-size: 0.8em;
+    text-indent: 2px
+}
+
+#name {
+    color: var(--offset-color);
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+#description {
+    color: inherit;
+    font-size: 0.9em;
+}
+
+#credits {
+    font-size: 0.8em;
+
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#credits span {
+    margin-right: 5px;
+
+    white-space: nowrap;
+}
+
+#source-url {
+    font-size: 0.9em;
+}
