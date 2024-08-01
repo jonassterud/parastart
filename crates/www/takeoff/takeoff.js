@@ -31,13 +31,13 @@ async function load_takeoff(id) {
 async function display_takeoff(takeoff) {
     const e_name = document.getElementById("name");
     const e_region = document.getElementById("region");
-    const e_image_container = document.getElementById("image-container");
+    const e_image = document.getElementById("image");
     const e_description = document.getElementById("description");
     const e_updated = document.getElementById("updated");
     const e_created = document.getElementById("created");
     const e_source_url = document.getElementById("source-url");
 
-    if ([e_name, e_region, e_image_container, e_description, e_updated, e_created, e_source_url].includes(null)) {
+    if ([e_name, e_region, e_image, e_description, e_updated, e_created, e_source_url].includes(null)) {
         throw new Error("failed finding one or more HTML elements");
     }
 
@@ -50,9 +50,7 @@ async function display_takeoff(takeoff) {
 
     if (takeoff.image !== null) {
         const image_base64 = btoa(String.fromCharCode.apply(null, new Uint8Array(takeoff.image)));
-        const e_image = document.createElement("img");
-
-        e_image.src = `data:image/png;base64,${image_base64}`; 
-        e_image_container.appendChild(e_image);
+        e_image.src = `data:image/png;base64,${image_base64}`;
+        e_image.removeAttribute("hidden");
     }
 }

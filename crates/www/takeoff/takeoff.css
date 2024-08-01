@@ -16,9 +16,19 @@
     font-size: 1.2em;
 }
 
+#content {
+    display: flex;
+}
+
 #description {
     color: inherit;
     font-size: 0.9em;
+}
+
+#image {
+    max-width: 35%;
+    height: auto;
+    padding: 10px;
 }
 
 #credits {

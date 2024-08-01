@@ -98,7 +98,9 @@ a, a:visited, a:hover, a:active {
     width: 100%;
     height: fit-content;
     padding: 10px;
-
+    
+    flex-grow: 1;
+    
     background-color: var(--background-color);
     color: var(--text-color);
 }
