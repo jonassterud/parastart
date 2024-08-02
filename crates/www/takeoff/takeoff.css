@@ -3,6 +3,14 @@
     flex-direction: column;
 }
 
+#content-left {
+    width: 70%;
+}
+
+#content-right {
+    width: 30%;
+}
+
 #region {
     color: inherit;
     opacity: 0.75;
@@ -26,7 +34,7 @@
 }
 
 #image {
-    max-width: 35%;
+    max-width: 100%;
     height: auto;
     padding: 10px;
 }
@@ -46,4 +54,59 @@
 
 #source-url {
     font-size: 0.9em;
+}
+
+#compass {
+    width: 50px;
+    min-width: 50px;
+    height: 50px;
+    min-height: 50px;
+
+    background-color: #b3b3b3;
+    border-radius: 100%;
+    border: 1px solid black;
+    box-sizing: content-box;
+    
+}
+
+#compass div {
+    width: inherit;
+    height: inherit;
+
+    position: absolute;
+
+    border-radius: 100%;
+    background-color: #00ff00;
+}
+
+#compass #N {
+    clip-path: polygon(25% 0%, 50% 50%, 75% 0%);
+}
+
+#compass #NE {
+    clip-path: polygon(75% 0%, 50% 50%, 100% 25%);
+}
+
+#compass #E {
+    clip-path: polygon(100% 25%, 50% 50%, 100% 75%);
+}
+
+#compass #SE {
+    clip-path: polygon(100% 75%, 50% 50%, 75% 100%);
+}
+
+#compass #S {
+    clip-path: polygon(75% 100%, 50% 50%, 25% 100%);
+}
+
+#compass #SW {
+    clip-path: polygon(25% 100%, 50% 50%, 0% 75%);
+}
+
+#compass #W {
+    clip-path: polygon(0% 75%, 50% 50%, 0% 25%);
+}
+
+#compass #NW {
+    clip-path: polygon(0% 25%, 50% 50%, 25% 0%);
 }

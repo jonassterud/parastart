@@ -53,4 +53,9 @@ async function display_takeoff(takeoff) {
         e_image.src = `data:image/png;base64,${image_base64}`;
         e_image.removeAttribute("hidden");
     }
+
+    takeoff.wind_dirs.forEach((dir) => {
+        const dir_e = document.querySelector(`#compass #${dir}`);
+        dir_e.removeAttribute("hidden");
+    });
 }
