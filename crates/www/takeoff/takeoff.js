@@ -4,7 +4,7 @@ try {
     const params = new URL(document.location.toString()).searchParams;
     const id = params.get("id");
 
-    if (id !== null) throw new Error("missing id parameter");
+    if (id === null) throw new Error("missing id parameter");
 
     fetch_takeoff(id).then(display_takeoff);
 } catch (error) {
@@ -70,7 +70,7 @@ async function display_takeoff(takeoff) {
         e_windy_iframe.src = `https://embed.windy.com/embed.html?
         type=map&location=coordinates&metricRain=mm&metricTemp=°C&metricWind=m/s
         &zoom=7&overlay=wind&product=ecmwf&level=${h}&lat=${lat}&lon=${lon}
-        &detailLat=${lat}&detailLon=${lon}&detail=true&message=true`;    
+        &detailLat=${lat}&detailLon=${lon}&detail=true&message=true&pressure=true`;    
     };
 
     // Synchronize height slider and Windy iframe function
