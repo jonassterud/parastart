@@ -82,13 +82,11 @@ a, a:visited, a:hover, a:active {
 
 .default-header {
     width: 100%;
-    height: 20%;
-    min-height: 40px;
-    max-height: 40px;
+    min-height: 50px;
 
     display: flex;
     justify-content: center;
-    align-items: start;
+    align-items: center;
 
     background-color: var(--offset-color);
     color: #FFFFFF;

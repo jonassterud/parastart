@@ -1,0 +1,102 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "SELECT * FROM takeoffs WHERE region LIKE $1 LIMIT $2 OFFSET $3",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "name",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "description",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "image",
+        "type_info": "Bytea"
+      },
+      {
+        "ordinal": 4,
+        "name": "region",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "altitude",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 6,
+        "name": "altitude_diff",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 7,
+        "name": "latitude",
+        "type_info": "Float8"
+      },
+      {
+        "ordinal": 8,
+        "name": "longitude",
+        "type_info": "Float8"
+      },
+      {
+        "ordinal": 9,
+        "name": "wind_dirs",
+        "type_info": "TextArray"
+      },
+      {
+        "ordinal": 10,
+        "name": "info_url",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 11,
+        "name": "source_url",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 12,
+        "name": "created",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 13,
+        "name": "updated",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text",
+        "Int8",
+        "Int8"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      true,
+      false,
+      true,
+      true,
+      false,
+      false,
+      false,
+      true,
+      true,
+      false,
+      false
+    ]
+  },
+  "hash": "35f59b62cbcabf7a91d9a7733fa1bd098b8c83d5c8a8ea02e62a4ed4ca4265f6"
+}
