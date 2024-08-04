@@ -21,20 +21,30 @@
             <div id="content">
                 <div id="content-left">
                     <p id="description"></p>
-                    <div id="compass">
-                        <div id="N" hidden></div>
-                        <div id="NE" hidden></div>
-                        <div id="E" hidden></div>
-                        <div id="SE" hidden></div>
-                        <div id="S" hidden></div>
-                        <div id="SW" hidden></div>
-                        <div id="W" hidden></div>
-                        <div id="NW" hidden></div>
+                    <div id="iframe-container">
+                        <iframe id="windy-iframe" width="650" height="450" frameborder="0"></iframe>
+                        <input type="range" min="0" max="15" value="0" name="height" id="windy-height">
+                        <label for="height"><span id="readable-height">Surface</span> height</label>
                     </div>
-                <iframe id="windy-iframe" width="650" height="450" frameborder="0"></iframe>
                 </div>
                 <div id="content-right">
                     <img id="image" hidden>
+                    <div id="compass-altitude-container">
+                        <div id="compass">
+                            <div id="N" hidden></div>
+                            <div id="NE" hidden></div>
+                            <div id="E" hidden></div>
+                            <div id="SE" hidden></div>
+                            <div id="S" hidden></div>
+                            <div id="SW" hidden></div>
+                            <div id="W" hidden></div>
+                            <div id="NW" hidden></div>
+                        </div>
+                        <div id="altitude-container">
+                            <span>Starthøyde: <span id="altitude"></span> m</span><br>
+                            <span>Høydeforskjell: <span id="altitude-diff"></span> m</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
