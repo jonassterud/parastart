@@ -28,6 +28,7 @@ async function display_takeoff(takeoff) {
     const e_updated = document.getElementById("updated");
     const e_created = document.getElementById("created");
     const e_source_url = document.getElementById("source-url");
+    const e_info_url = document.getElementById("info-url");
     const e_windy_iframe = document.getElementById("windy-iframe");
     const e_windy_height = document.getElementById("windy-height");
     const e_readable_height = document.getElementById("readable-height");
@@ -35,8 +36,8 @@ async function display_takeoff(takeoff) {
     // Guard against missing elements
     const required_elements = [
         e_name, e_region, e_image, e_description, e_updated,
-        e_created, e_source_url, e_windy_iframe, e_windy_height,
-        e_readable_height, e_altitude, e_altitude_diff
+        e_created, e_source_url, e_info_url, e_windy_iframe,
+        e_windy_height, e_readable_height, e_altitude, e_altitude_diff
     ];
 
     if (required_elements.includes(null)) throw new Error("missing HTML elements");
@@ -50,6 +51,11 @@ async function display_takeoff(takeoff) {
     e_updated.innerText = takeoff.updated;
     e_created.innerText = takeoff.created;
     e_source_url.setAttribute("href", takeoff.source_url);
+    
+    if (e_info_url !== null) {
+        e_info_url.setAttribute("href", takeoff.info_url);
+        e_info_url.removeAttribute("hidden");
+    }
 
     // Create image
     if (takeoff.image !== null) {

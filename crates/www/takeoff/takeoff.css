@@ -21,13 +21,15 @@
     filter: invert(100%);
 }
 
-#source-url-container {
+#urls-container {
     width: 100%;
-    text-align: center;
+    max-height: 0px;
+    display: flex;
+    justify-content: center;
 }
 
 #source-url {
-    position: absolute;
+    margin-right: 50px;
 }
 
 #region {
