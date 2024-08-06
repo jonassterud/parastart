@@ -1,10 +1,16 @@
+use std::str::FromStr;
+
 use crate::error::ServerError;
-use sqlx::{postgres::PgPoolOptions, Connection, PgConnection, PgPool};
+use sqlx::{
+    postgres::PgConnectOptions,
+    Connection, PgConnection, PgPool,
+};
 
 /// Create a connection pool to the database.
 pub async fn pool() -> Result<PgPool, ServerError> {
     let url = std::env::var("DATABASE_URL")?;
-    let pool = PgPoolOptions::new().connect(&url).await?;
+    let options = PgConnectOptions::from_str(&url)?;
+    let pool = PgPool::connect_with(options).await?;
 
     sqlx::migrate!("src/database/migrations").run(&pool).await?;
 
