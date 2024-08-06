@@ -1,10 +1,7 @@
 use std::str::FromStr;
 
 use crate::error::ServerError;
-use sqlx::{
-    postgres::PgConnectOptions,
-    Connection, PgConnection, PgPool,
-};
+use sqlx::{postgres::PgConnectOptions, Connection, PgConnection, PgPool};
 
 /// Create a connection pool to the database.
 pub async fn pool() -> Result<PgPool, ServerError> {

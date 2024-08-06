@@ -32,7 +32,7 @@ impl Default for GetTakeoffsParams {
         Self {
             id: None,
             page: 1,
-            limit: 10,
+            limit: i64::MAX,
             region: "%".to_owned(),
             fields: Vec::default(),
         }
