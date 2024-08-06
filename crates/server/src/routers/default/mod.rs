@@ -2,7 +2,8 @@ use axum::{
     async_trait,
     extract::{FromRequestParts, Query, Request},
     http::request::Parts,
-    routing::get, Router,
+    routing::get,
+    Router,
 };
 use serde::Deserialize;
 use tower::ServiceExt;

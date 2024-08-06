@@ -83,6 +83,8 @@ a, a:visited, a:hover, a:active {
 .default-header {
     width: 100%;
     min-height: 50px;
+    max-height: 50px;
+    padding: 10px;
 
     display: flex;
     justify-content: center;
@@ -90,6 +92,22 @@ a, a:visited, a:hover, a:active {
 
     background-color: var(--offset-color);
     color: #FFFFFF;
+}
+
+.default-header a {
+    text-decoration: none;
+    color: inherit;
+    margin-right: 30px;
+}
+
+.default-header a:first-child {
+    margin-right: auto;
+}
+
+.default-header #logo {
+    vertical-align: top;
+    margin-right: 5px;
+    filter: invert(100%);
 }
 
 .default-main {
