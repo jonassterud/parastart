@@ -1,7 +1,8 @@
 use super::version::Version;
 use crate::{
     database::helpers,
-    error::ServerError, models::{Data, GetTakeoff, NewTakeoff},
+    error::ServerError,
+    models::{Data, GetTakeoff, NewTakeoff},
 };
 use axum::{
     routing::{get, post},
@@ -25,6 +26,7 @@ struct GetTakeoffsParams {
     limit: i64,
     region: String,
     fields: Vec<String>,
+    count: bool,
 }
 
 impl Default for GetTakeoffsParams {
@@ -35,6 +37,7 @@ impl Default for GetTakeoffsParams {
             limit: i64::MAX,
             region: "%".to_owned(),
             fields: Vec::default(),
+            count: false,
         }
     }
 }
@@ -45,17 +48,15 @@ async fn get_takeoffs(
     Query(params): Query<GetTakeoffsParams>,
 ) -> Result<Json<Vec<GetTakeoff>>, ServerError> {
     let fields = params.fields.join(", ");
-    let fields = if fields.is_empty() { "*" } else { &fields };
+    let fields = if fields.is_empty() { "*".to_owned() } else { fields };
 
     // TODO: bind on fields?
     let out = if let Some(id) = params.id {
-        sqlx::query_as(&format!(
-            "SELECT {fields} FROM takeoffs WHERE id = $2"
-        ))
-        .bind(id)
-        .fetch_optional(&*pool)
-        .await?
-        .map_or(Vec::new(), |v| vec![v])
+        sqlx::query_as(&format!("SELECT {fields} FROM takeoffs WHERE id = $2"))
+            .bind(id)
+            .fetch_optional(&*pool)
+            .await?
+            .map_or(Vec::new(), |v| vec![v])
     } else {
         sqlx::query_as(&format!(
             "SELECT {fields} FROM takeoffs WHERE region LIKE $1 LIMIT $2 OFFSET $3"
