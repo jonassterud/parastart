@@ -52,7 +52,7 @@ async fn get_takeoffs(
 
     // TODO: bind on fields?
     let out = if let Some(id) = params.id {
-        sqlx::query_as(&format!("SELECT {fields} FROM takeoffs WHERE id = $2"))
+        sqlx::query_as(&format!("SELECT {fields} FROM takeoffs WHERE id = $1"))
             .bind(id)
             .fetch_optional(&*pool)
             .await?
