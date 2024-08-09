@@ -11,7 +11,7 @@ window.onload = () => {
 /**
  * Fill the "results-table" with takeoffs.
  * 
- * @returns An array of inserted rows.
+ * @returns An array of arrays, where the innermost array contains a takeoff object and its node.
  */
 async function fill_results_table() {
     // Get HTML elements
@@ -65,6 +65,11 @@ async function fill_results_table() {
     return out;
 }
 
+/**
+ * Handle sorting.
+ * 
+ * @param {Array<Array<Object>>} data - An array of arrays, where the innermost array contains a takeoff object and its node.
+ */
 function handle_sorting(data) {
     // Get HTML elements
     const e_search = document.getElementById("search");
@@ -90,24 +95,34 @@ function handle_sorting(data) {
     });
 
     // Name, description and region sort
-    e_name_header.addEventListener("click", async (e) => alphabetic_sort(data, e.target), false);
-    e_description_header.addEventListener("click", async (e) => alphabetic_sort(data, e.target), false);
-    e_region_header.addEventListener("click", async (e) => alphabetic_sort(data, e.target), false);
+    try {
+        e_name_header.addEventListener("click", async (e) => alphabetic_sort(data, e.target, (a, b) => a.name > b.name), false);
+        e_description_header.addEventListener("click", async (e) => alphabetic_sort(data, e.target, (a, b) => a.description > b.description), false);
+        e_region_header.addEventListener("click", async (e) => alphabetic_sort(data, e.target, (a, b) => a.region > b.region), false);
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 /**
  * Alphabetically sort the `data` list based on the "order" attribute on `element`. 
  * 
  * @param {Array<Array<Object>>} data - Takeoff data and their nodes.
- * @param {HTMLElement} element 
+ * @param {HTMLElement} element - HTML element that was clicked.
+ * @param {(a: Array<Object>, b: Array<Object>) => Boolean} fn - Ascending sort function for `data`.
  */
-function alphabetic_sort(data, element) {
+function alphabetic_sort(data, element, fn) {
     const prevOrder =  element.getAttribute("order") || "asc";
     element.setAttribute("order", prevOrder === "asc" ? "desc" : "asc");
-
-    data.sort((a, b) => prevOrder === "asc" ? a[0].name > b[0].name : a[0].name < b[0].name);
+    data.sort((a, b) => fn(a[0], b[0]));
+    
     for (let i = 0; i < data.length; i++) {
-        const [_, e_takeoff] = data[i];
-        e_takeoff.style.order = i;
+        if (prevOrder === "asc") {
+            data[i][1].style.order = i;
+        } else if (prevOrder === "desc") {
+            data[data.length - 1 - i][1].style.order = i;
+        } else {
+            throw new Error(`unexpected prevOrder: ${prevOrder}`);
+        }
     }
 }
