@@ -36,13 +36,14 @@ async function fill_results_table() {
     }
 
     // Insert takeoffs
-    const out = takeoffs.map((takeoff) => {
+    const out = takeoffs.map((takeoff, i) => {
         const e_takeoff_container = document.createElement("div");
         const e_takeoff_name = document.createElement("a");
         const e_takeoff_description = document.createElement("span");
         const e_takeoff_region = document.createElement("span");
         const e_takeoff_location = document.createElement("span");
 
+        e_takeoff_container.style.order = i;
         e_takeoff_container.classList.add("takeoff");
         e_takeoff_name.classList.add("name");
         e_takeoff_description.classList.add("description");
@@ -67,22 +68,46 @@ async function fill_results_table() {
 function handle_sorting(data) {
     // Get HTML elements
     const e_search = document.getElementById("search");
+    const e_name_header = document.getElementById("name-header");
+    const e_description_header = document.getElementById("description-header");
+    const e_region_header = document.getElementById("region-header");
+    const e_location_header = document.getElementById("location-header");
 
     // Guard against missing elements
-    const required_elements = [e_search];
+    const required_elements = [e_search, e_name_header, e_description_header, e_region_header, e_location_header];
     if (required_elements.includes(null)) throw new Error("missing HTML elements");
 
-    // Event handlers
-    e_search.addEventListener("input", async (e) => update(data, e.target.value), false);
-
-    // Sort function
-    async function update(data, search_text) {
+    // Search sort
+    e_search.addEventListener("input", async (e) => {
         for (let [takeoff, e_takeoff] of data) {
+            // Text match
             const formatText = (text) => text.toLowerCase().replaceAll(' ', '');
             const checkMatch = (text, search) => formatText(text).includes(formatText(search));
-            const match = checkMatch(takeoff.name + takeoff.description + takeoff.region, search_text);
+            const match = checkMatch(takeoff.name + takeoff.description + takeoff.region, e.target.value);
 
-            e_takeoff.setAttribute("match", match);
+            e_takeoff.setAttribute("match", match);  
         }
-    };
+    });
+
+    // Name, description and region sort
+    e_name_header.addEventListener("click", async (e) => alphabetic_sort(data, e.target), false);
+    e_description_header.addEventListener("click", async (e) => alphabetic_sort(data, e.target), false);
+    e_region_header.addEventListener("click", async (e) => alphabetic_sort(data, e.target), false);
+}
+
+/**
+ * Alphabetically sort the `data` list based on the "order" attribute on `element`. 
+ * 
+ * @param {Array<Array<Object>>} data - Takeoff data and their nodes.
+ * @param {HTMLElement} element 
+ */
+function alphabetic_sort(data, element) {
+    const prevOrder =  element.getAttribute("order") || "asc";
+    element.setAttribute("order", prevOrder === "asc" ? "desc" : "asc");
+
+    data.sort((a, b) => prevOrder === "asc" ? a[0].name > b[0].name : a[0].name < b[0].name);
+    for (let i = 0; i < data.length; i++) {
+        const [_, e_takeoff] = data[i];
+        e_takeoff.style.order = i;
+    }
 }
