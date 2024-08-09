@@ -38,12 +38,13 @@ async function fill_results_table() {
     // Insert takeoffs
     const out = takeoffs.map((takeoff) => {
         const e_takeoff_container = document.createElement("div");
-        const e_takeoff_name = document.createElement("span");
+        const e_takeoff_name = document.createElement("a");
         const e_takeoff_description = document.createElement("span");
         const e_takeoff_region = document.createElement("span");
         const e_takeoff_location = document.createElement("span");
 
         e_takeoff_name.innerText = takeoff.name;
+        e_takeoff_name.href = `?id=${takeoff.id}`;
         e_takeoff_description.innerText = takeoff.description;//.split(' ').slice(0, 10).join(' ').substring(0, 10 * 9) + " (...)";
         e_takeoff_region.innerText = takeoff.region;
         e_takeoff_location.innerText = `${takeoff.latitude}, ${takeoff.longitude}`;
