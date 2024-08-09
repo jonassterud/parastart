@@ -43,11 +43,17 @@ async function fill_results_table() {
         const e_takeoff_region = document.createElement("span");
         const e_takeoff_location = document.createElement("span");
 
+        e_takeoff_container.classList.add("takeoff");
+        e_takeoff_name.classList.add("name");
+        e_takeoff_description.classList.add("description");
+        e_takeoff_region.classList.add("region");
+        e_takeoff_location.classList.add("location");
+
         e_takeoff_name.innerText = takeoff.name;
         e_takeoff_name.href = `?id=${takeoff.id}`;
-        e_takeoff_description.innerText = takeoff.description;//.split(' ').slice(0, 10).join(' ').substring(0, 10 * 9) + " (...)";
+        e_takeoff_description.innerText = takeoff.description; //.split(' ').slice(0, 10).join(' ').substring(0, 10 * 9) + " (...)";
         e_takeoff_region.innerText = takeoff.region;
-        e_takeoff_location.innerText = `${takeoff.latitude}, ${takeoff.longitude}`;
+        e_takeoff_location.innerText = "todo"; // `${takeoff.latitude}, ${takeoff.longitude}`;
 
         e_takeoff_container.append(e_takeoff_name, e_takeoff_description, e_takeoff_region, e_takeoff_location);
         e_results_content.append(e_takeoff_container);
