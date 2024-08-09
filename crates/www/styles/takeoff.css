@@ -1,12 +1,9 @@
 #urls-container {
-    width: 100%;
     max-height: 0px;
-    display: flex;
-    justify-content: center;
 }
 
-#source-url {
-    margin-right: 50px;
+#urls-container * ~ * {
+    margin-left: 50px;
 }
 
 #region {
@@ -22,21 +19,16 @@
     font-size: 1.2em;
 }
 
-#content-top {
-    display: flex;
-}
-
 #content-left {
     width: 60%;
 }
 
-#description {
-    color: inherit;
-    font-size: 0.9em;
-}
-
 #content-right {
     width: 40%;
+}
+
+#description {
+    font-size: 0.9em;
 }
 
 #image {
@@ -57,10 +49,6 @@
 
 #iframe-container {
     width: 650px;
-    
-    display: flex;
-    flex-direction: column;
-    align-items: center;
 }
 
 #windy-height {

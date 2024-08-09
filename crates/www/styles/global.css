@@ -25,6 +25,23 @@ a, a:visited, a:hover, a:active {
 
 /* Generic classes */
 
+.flex {
+    display: flex;
+}
+
+.horizontal-row-center {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.horizontal-column-center {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .center {
     width: 100vw;
     height: 100vh;
