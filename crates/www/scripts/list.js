@@ -94,11 +94,12 @@ function handle_sorting(data) {
         }
     });
 
-    // Name, description and region sort
+    // Name, description, region and location sort
     try {
         e_name_header.addEventListener("click", async (e) => alphabetic_sort(data, e.target, (a, b) => a.name > b.name), false);
         e_description_header.addEventListener("click", async (e) => alphabetic_sort(data, e.target, (a, b) => a.description > b.description), false);
         e_region_header.addEventListener("click", async (e) => alphabetic_sort(data, e.target, (a, b) => a.region > b.region), false);
+        e_location_header.addEventListener("click", async (e) => location_sort(data, e.target), false);
     } catch (error) {
         console.error(error);
     }
@@ -115,7 +116,7 @@ function alphabetic_sort(data, element, fn) {
     const prevOrder =  element.getAttribute("order") || "asc";
     element.setAttribute("order", prevOrder === "asc" ? "desc" : "asc");
     data.sort((a, b) => fn(a[0], b[0]));
-    
+
     for (let i = 0; i < data.length; i++) {
         if (prevOrder === "asc") {
             data[i][1].style.order = i;
@@ -124,5 +125,48 @@ function alphabetic_sort(data, element, fn) {
         } else {
             throw new Error(`unexpected prevOrder: ${prevOrder}`);
         }
+    }
+}
+
+/**
+ * Geographically sort the `data` list based on the "order" attribute on `element`
+ * 
+ * @param {Array<Array<Object>>} data - Takeoff data and their nodes.
+ * @param {HTMLElement} element - HTML element that was clicked.
+ * @copyright https://stackoverflow.com/a/21623206
+ */
+function location_sort(data, element) {
+    const prevOrder =  element.getAttribute("order") || "asc";
+    element.setAttribute("order", prevOrder === "asc" ? "desc" : "asc");
+    
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((pos) => {
+            // Distance formula
+            const r = 6371;
+            const p = Math.PI / 180;
+            const dist = (a, b) => {
+                const n = 0.5 - Math.cos((b.latitude - a.latitude) * p) / 2
+                + Math.cos(a.latitude * p) * Math.cos(b.latitude * p) * 
+                (1 - Math.cos((b.longitude - a.longitude) * p)) / 2;
+
+                return 2 * r * Math.asin(Math.sqrt(n));
+            };
+
+            // Sort
+            data.sort((a, b) => dist(a, pos.coords) < dist(b, pos.coords));
+            
+            // Apply order
+            for (let i = 0; i < data.length; i++) {
+                if (prevOrder === "asc") {
+                    data[i][1].style.order = i;
+                } else if (prevOrder === "desc") {
+                    data[data.length - 1 - i][1].style.order = i;
+                } else {
+                    throw new Error(`unexpected prevOrder: ${prevOrder}`);
+                }
+            }
+        }, (error) => {
+            console.error(error);
+        });
     }
 }
