@@ -76,10 +76,9 @@ async function display_takeoff(takeoff) {
 
     // Set Windy iframe function
     const set_windy_iframe = (lat, lon, h) => {
-        e_windy_iframe.src = `https://embed.windy.com/embed.html?
-        type=map&location=coordinates&metricRain=mm&metricTemp=°C&metricWind=m/s
-        &zoom=7&overlay=wind&product=ecmwf&level=${h}&lat=${lat}&lon=${lon}
-        &detailLat=${lat}&detailLon=${lon}&detail=true&message=true&pressure=true`;    
+        e_windy_iframe.src = "https://embed.windy.com/embed.html?" +
+        "type=map&location=coordinates&metricRain=mm&metricTemp=°C&metricWind=m/s&zoom=7&overlay=wind&product=ecmwf&" + 
+        `level=${h}&lat=${lat}&lon=${lon}&detailLat=${lat}&detailLon=${lon}&detail=true&message=true&pressure=true`;    
     };
 
     // Synchronize height slider and Windy iframe function
