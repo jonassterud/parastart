@@ -42,6 +42,7 @@ async function fill_results_table() {
         const e_takeoff_description = document.createElement("span");
         const e_takeoff_region = document.createElement("span");
         const e_takeoff_location = document.createElement("span");
+        const e_takeoff_distance = document.createElement("span");
 
         e_takeoff_container.style.order = i;
         e_takeoff_container.classList.add("takeoff");
@@ -49,13 +50,16 @@ async function fill_results_table() {
         e_takeoff_description.classList.add("description");
         e_takeoff_region.classList.add("region");
         e_takeoff_location.classList.add("location");
+        e_takeoff_distance.classList.add("distance");
 
         e_takeoff_name.innerText = takeoff.name;
         e_takeoff_name.href = `?id=${takeoff.id}`;
         e_takeoff_description.innerText = takeoff.description; //.split(' ').slice(0, 10).join(' ').substring(0, 10 * 9) + " (...)";
         e_takeoff_region.innerText = takeoff.region;
-        e_takeoff_location.innerText = "todo"; // `${takeoff.latitude}, ${takeoff.longitude}`;
+        e_takeoff_location.innerText = `${takeoff.latitude.toFixed(4)}, ${takeoff.longitude.toFixed(4)}\n`;
+        e_takeoff_distance.innerText = "";
 
+        e_takeoff_location.append(e_takeoff_distance);
         e_takeoff_container.append(e_takeoff_name, e_takeoff_description, e_takeoff_region, e_takeoff_location);
         e_results_content.append(e_takeoff_container);
 
@@ -96,9 +100,9 @@ function handle_sorting(data) {
 
     // Name, description, region and location sort
     try {
-        e_name_header.addEventListener("click", async (e) => alphabetic_sort(data, e.target, (a, b) => a.name > b.name), false);
-        e_description_header.addEventListener("click", async (e) => alphabetic_sort(data, e.target, (a, b) => a.description > b.description), false);
-        e_region_header.addEventListener("click", async (e) => alphabetic_sort(data, e.target, (a, b) => a.region > b.region), false);
+        e_name_header.addEventListener("click", async (e) => alphabetic_sort(data, e.target, (v) => v.name), false);
+        e_description_header.addEventListener("click", async (e) => alphabetic_sort(data, e.target, (v) => v.description), false);
+        e_region_header.addEventListener("click", async (e) => alphabetic_sort(data, e.target, (v) => v.region), false);
         e_location_header.addEventListener("click", async (e) => location_sort(data, e.target), false);
     } catch (error) {
         console.error(error);
@@ -110,17 +114,19 @@ function handle_sorting(data) {
  * 
  * @param {Array<Array<Object>>} data - Takeoff data and their nodes.
  * @param {HTMLElement} element - HTML element that was clicked.
- * @param {(a: Array<Object>, b: Array<Object>) => Boolean} fn - Ascending sort function for `data`.
+ * @param {(a: Array<Object>) => String} fn - Function that returns the parameter to sort by.
  */
 function alphabetic_sort(data, element, fn) {
     const prevOrder =  element.getAttribute("order") || "asc";
     element.setAttribute("order", prevOrder === "asc" ? "desc" : "asc");
-    data.sort((a, b) => fn(a[0], b[0]));
+    
+    const collator = new Intl.Collator();
+    data.sort((a, b) => collator.compare(fn(a[0]), fn(b[0])));
 
     for (let i = 0; i < data.length; i++) {
-        if (prevOrder === "asc") {
+        if (prevOrder === "desc") {
             data[i][1].style.order = i;
-        } else if (prevOrder === "desc") {
+        } else if (prevOrder === "asc") {
             data[data.length - 1 - i][1].style.order = i;
         } else {
             throw new Error(`unexpected prevOrder: ${prevOrder}`);
@@ -139,6 +145,7 @@ function location_sort(data, element) {
     const prevOrder =  element.getAttribute("order") || "asc";
     element.setAttribute("order", prevOrder === "asc" ? "desc" : "asc");
     
+    // TODO: Re-use distance and update based on timestamp
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition((pos) => {
             // Distance formula
@@ -152,16 +159,29 @@ function location_sort(data, element) {
                 return 2 * r * Math.asin(Math.sqrt(n));
             };
 
+            // Map the distance
+            data = data.map((v) => {
+                const distance = dist(v[0], pos.coords);
+                v[0]["distance"] = distance
+
+                return v;
+            });
+
             // Sort and apply order
-            data.sort((a, b) => dist(a[0], pos.coords) < dist(b[0], pos.coords)); 
+            data.sort((a, b) => a[0].distance - b[0].distance);
             for (let i = 0; i < data.length; i++) {
-                if (prevOrder === "asc") {
+                if (prevOrder === "desc") {
                     data[i][1].style.order = i;
-                } else if (prevOrder === "desc") {
+                } else if (prevOrder === "asc") {
                     data[data.length - 1 - i][1].style.order = i;
                 } else {
                     throw new Error(`unexpected prevOrder: ${prevOrder}`);
                 }
+
+                // Display distance
+                const e_location = data[i][1].getElementsByClassName("distance").item(0);
+                if (e_location === null) throw new Error("missing HTML element");
+                e_location.innerText = `Ca. ${data[i][0].distance.toFixed(2)} km`;
             }
         }, (error) => {
             console.error(error);
