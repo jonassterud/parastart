@@ -146,16 +146,14 @@ function location_sort(data, element) {
             const p = Math.PI / 180;
             const dist = (a, b) => {
                 const n = 0.5 - Math.cos((b.latitude - a.latitude) * p) / 2
-                + Math.cos(a.latitude * p) * Math.cos(b.latitude * p) * 
-                (1 - Math.cos((b.longitude - a.longitude) * p)) / 2;
+                + Math.cos(a.latitude * p) * Math.cos(b.latitude * p) *
+                  (1 - Math.cos((b.longitude - a.longitude) * p)) / 2;
 
                 return 2 * r * Math.asin(Math.sqrt(n));
             };
 
-            // Sort
-            data.sort((a, b) => dist(a, pos.coords) < dist(b, pos.coords));
-            
-            // Apply order
+            // Sort and apply order
+            data.sort((a, b) => dist(a[0], pos.coords) < dist(b[0], pos.coords)); 
             for (let i = 0; i < data.length; i++) {
                 if (prevOrder === "asc") {
                     data[i][1].style.order = i;
