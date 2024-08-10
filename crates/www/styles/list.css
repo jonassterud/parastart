@@ -1,0 +1,88 @@
+#search-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+#search {
+    width: 30%;
+    height: 40px;
+    text-align: center;
+    outline: none;
+}
+
+#results-table {
+    width: 100%;
+    padding: 10px;
+    color: inherit;
+}
+
+#results-header {
+    font-weight: bold;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+#name-header:hover, #description-header:hover, #region-header:hover, #location-header:hover {
+    cursor: pointer;
+}
+
+#name-header:active, #description-header:active, #region-header:active, #location-header:active {
+    cursor: wait;
+}
+
+#results-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.takeoff {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.takeoff ~ .takeoff {
+    margin-top: 15px;
+}
+
+#results-content .description {
+    max-height: calc(1em * 3);
+    font-size: 0.9em;
+    word-break: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.name {
+    width: 10%;
+    min-width: 10%;
+    max-width: 10%;
+    word-break: break-word;
+    overflow: hidden;
+} 
+
+.description {
+    width: 70%;
+    min-width: 70%;
+    max-width: 70%;
+    padding: 5px;
+} 
+
+.region {
+    width: 10%;
+    min-width: 10%;
+    max-width: 10%;
+}
+
+.location {
+    width: 10%;
+    min-width: 10%;
+    max-width: 10%;
+}
+
+.takeoff[match="false"] {
+    display: none;
+}

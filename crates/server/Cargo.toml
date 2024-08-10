@@ -17,8 +17,10 @@ anyhow = { workspace = true, features = [] }
 tracing = { workspace = true, features = [] }
 tracing-subscriber = { workspace = true, features = ["env-filter"] }
 sqlx = { workspace = true, features = ["runtime-tokio-rustls", "any", "postgres"] }
-axum = { version = "0.7", features = ["tracing", "json", "macros"] }
+axum = { version = "0.7", features = ["tracing", "json", "macros", "query"] }
+tower =  { version = "0.4", features = [] }
 tower-http = { version = "0.5", features = ["trace", "cors", "fs"] }
 rand = { version = "0.8", features = [] }
 rand_chacha = { version = "0.3", features = [] }
 bcrypt = { version = "0.15", features = [] }
+axum-extra = { version = "0.9", features = ["query"] }

@@ -3,32 +3,30 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link type="text/css" rel="stylesheet" href="../global/global.css">
-        <link type="text/css" rel="stylesheet" href="./takeoff.css">
-        <script src="../global/global.js"></script>
-        <script src="./takeoff.js"></script>
+        <link type="text/css" rel="stylesheet" href="/styles/global.css">
+        <link type="text/css" rel="stylesheet" href="/styles/takeoff.css">
+        <script src="/scripts/global.js"></script>
+        <script src="/scripts/takeoff.js"></script>
         <title>Parastart</title>
     </head>
     <body class="default-body">
         <header class="default-header">
-            <div id="header-links">
-                <a href="/"><img id="logo" src="../assets/paraglider.svg" width="20px">Parastart</a>
-                <a href="/resources">Resources</a>
-                <a href="/takeoffs">Takeoffs</a>
-                <a href="/map">Map</a>
-            </div>
+            <a href="/"><img id="logo" src="/assets/paraglider.svg" width="20px">Parastart</a>
+            <a href="/resources">Resources</a>
+            <a href="/takeoffs">Takeoffs</a>
+            <a href="/map">Map</a>
         </header>
         <main class="default-main">
-            <div id="urls-container">
+            <div id="urls-container" class="horizontal-row-center">
                 <a id="source-url" href="" target="_blank">Source</a>
                 <a id="info-url" href="" target="_blank" hidden>More info</a>
             </div>
-            <div id="titles">
+            <div>
                 <span id="region"></span>
                 <br>
                 <span id="name"></span>
             </div>
-            <div id="content-top">
+            <div class="flex">
                 <div id="content-left">
                     <p id="description"></p>
                 </div>
@@ -52,7 +50,7 @@
                 </div>
             </div>
             <div id="content-bottom">
-                <div id="iframe-container">
+                <div id="iframe-container" class="horizontal-column-center">
                     <iframe id="windy-iframe" width="650" height="450" frameborder="0"></iframe>
                     <input type="range" min="0" max="15" value="0" name="height" id="windy-height">
                     <label for="height"><span id="readable-height">Surface</span> height</label>

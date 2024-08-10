@@ -1,15 +1,18 @@
 "use strict"
 
-try {
-    const params = new URL(document.location.toString()).searchParams;
-    const id = params.get("id");
-
-    if (id === null) throw new Error("missing id parameter");
-
-    fetch_takeoff(id).then(display_takeoff);
-} catch (error) {
-    console.error(error);
+window.onload = () => {
+    try {
+        const params = new URL(document.location.toString()).searchParams;
+        const id = params.get("id");
+    
+        if (id === null) throw new Error("missing id parameter");
+    
+        fetch_takeoff(id).then(display_takeoff);
+    } catch (error) {
+        console.error(error);
+    }
 }
+
 
 /**
  * Fill HTML elements with takeoff data.
@@ -59,7 +62,7 @@ async function display_takeoff(takeoff) {
 
     // Create image
     if (takeoff.image !== null) {
-        const image_base64 = btoa(String.fromCharCode.apply(null, new Uint8Array(takeoff.image)));
+        const image_base64 = btoa(Array.from(new Uint8Array(takeoff.image)).map(b => String.fromCharCode(b)).join(''))
         e_image.src = `data:image/png;base64,${image_base64}`;
         e_image.removeAttribute("hidden");
         e_image.addEventListener("click", () => window.location.href = e_image.src);
@@ -73,10 +76,9 @@ async function display_takeoff(takeoff) {
 
     // Set Windy iframe function
     const set_windy_iframe = (lat, lon, h) => {
-        e_windy_iframe.src = `https://embed.windy.com/embed.html?
-        type=map&location=coordinates&metricRain=mm&metricTemp=°C&metricWind=m/s
-        &zoom=7&overlay=wind&product=ecmwf&level=${h}&lat=${lat}&lon=${lon}
-        &detailLat=${lat}&detailLon=${lon}&detail=true&message=true&pressure=true`;    
+        e_windy_iframe.src = "https://embed.windy.com/embed.html?" +
+        "type=map&location=coordinates&metricRain=mm&metricTemp=°C&metricWind=m/s&zoom=7&overlay=wind&product=ecmwf&" + 
+        `level=${h}&lat=${lat}&lon=${lon}&detailLat=${lat}&detailLon=${lon}&detail=true&message=true&pressure=true`;    
     };
 
     // Synchronize height slider and Windy iframe function

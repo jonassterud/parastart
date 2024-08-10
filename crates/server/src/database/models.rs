@@ -15,6 +15,7 @@ pub struct Data<T> {
 /// Takeoff model.
 ///
 /// * Use [`NewTakeoff`] for creating a new takeoff.
+/// * Use [`GetTakeoff`] for optional fields.
 #[derive(Debug, Serialize, FromRow)]
 pub struct Takeoff {
     /// Incrementing ID.
@@ -78,6 +79,42 @@ pub struct NewTakeoff {
     pub created: String,
     /// Last update date and author name.
     pub updated: String,
+}
+
+/// Get takeoff model.
+///
+/// Used for getting takeoffs.
+#[derive(Debug, Default, Serialize, FromRow)]
+#[sqlx(default)]
+pub struct GetTakeoff {
+    /// Incrementing ID.
+    pub id: Option<i32>,
+    /// String.
+    pub name: Option<String>,
+    /// Description.
+    pub description: Option<String>,
+    /// Optional image.
+    pub image: Option<Vec<u8>>,
+    /// Region.
+    pub region: Option<String>,
+    // Optional meters over sea level
+    pub altitude: Option<i32>,
+    /// Optional difference between takeoff and landing in altitude.
+    pub altitude_diff: Option<i32>,
+    /// Latitude coordinate.
+    pub latitude: Option<f64>,
+    /// Longitude coordinate.
+    pub longitude: Option<f64>,
+    /// Wind directions.
+    pub wind_dirs: Option<Vec<String>>,
+    /// Optional info URL.
+    pub info_url: Option<String>,
+    /// Optional source URL.
+    pub source_url: Option<String>,
+    /// Creation date and author name.
+    pub created: Option<String>,
+    /// Last update date and author name.
+    pub updated: Option<String>,
 }
 
 /// User model.
