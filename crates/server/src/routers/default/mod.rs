@@ -15,6 +15,7 @@ pub fn router() -> Router {
         .nest_service("/styles", ServeDir::new("crates/www/styles"))
         .nest_service("/assets", ServeDir::new("crates/www/assets"))
         .nest_service("/", ServeFile::new("crates/www/pages/home.html"))
+        .nest_service("/map", ServeFile::new("crates/www/pages/map.html"))
         .nest_service(
             "/takeoffs",
             get(|params: Params, request: Request| async move {
