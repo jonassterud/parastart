@@ -14,6 +14,7 @@ pub fn router() -> Router {
         .nest_service("/scripts", ServeDir::new("crates/www/scripts"))
         .nest_service("/styles", ServeDir::new("crates/www/styles"))
         .nest_service("/assets", ServeDir::new("crates/www/assets"))
+        .nest_service("/vendor", ServeDir::new("crates/www/vendor"))
         .nest_service("/", ServeFile::new("crates/www/pages/home.html"))
         .nest_service("/map", ServeFile::new("crates/www/pages/map.html"))
         .nest_service(

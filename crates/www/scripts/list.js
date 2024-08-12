@@ -22,18 +22,7 @@ async function fill_results_table() {
     if (required_elements.includes(null)) throw new Error("missing HTML elements");
 
     // Fetch (all) takeoffs (if missing any)
-    let takeoffs = [];
-    const hash = await fetch_takeoffs(undefined, undefined, undefined, ["id"])
-        .then((res) => res.map((v) => v.id).join(''))
-        .then((s => cyrb53(s).toString()));
-
-    if (hash !== window.localStorage.getItem("hash")) {
-        takeoffs = await fetch_takeoffs(undefined, undefined, undefined, ["id", "name", "description", "region", "latitude", "longitude"]);
-        window.localStorage.setItem("takeoffs", JSON.stringify(takeoffs));
-        window.localStorage.setItem("hash", cyrb53(takeoffs.map((v) => v.id).join('')).toString());
-    } else {
-        takeoffs = JSON.parse(window.localStorage.getItem("takeoffs"));
-    }
+    const takeoffs = await fetch_all_takeoffs_prefer_local(["id", "name", "description", "region", "latitude", "longitude"]);
 
     // Insert takeoffs
     const out = takeoffs.map((takeoff, i) => {

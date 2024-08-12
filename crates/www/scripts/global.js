@@ -53,6 +53,52 @@ async function fetch_takeoff(id) {
 }
 
 /**
+ * Fetch all takeoffs - locally if available, remotely if not.
+ * 
+ * @param {Array<String>} [fields] Optional list of columns to fetch (doesn't support `image`).
+ * @returns {Promise<Array<Object>>} A list of takeoffs as objects.
+ */
+async function fetch_all_takeoffs_prefer_local(fields) {
+    let out = [];
+
+    // Check fields
+    if (fields === undefined) fields = [];
+    if (fields.includes("image")) throw new Error("unsupported field");
+    if (!fields.includes("id")) fields.push("id");
+
+    // Calculate hash of remotely stored takeoffs
+    const hash = await fetch_takeoffs(undefined, undefined, undefined, ["id"])
+        .then((res) => res.map((v) => v.id).join(''))
+        .then((s => cyrb53(s).toString()));
+
+    // Remote fetch and update local storage function
+    const get_remote = async () => {
+        const takeoffs = await fetch_takeoffs(undefined, undefined, undefined, fields);
+        window.localStorage.setItem("takeoffs", JSON.stringify(takeoffs));
+        window.localStorage.setItem("hash", cyrb53(takeoffs.map((v) => v.id).join('')).toString());
+    };
+
+    // Fetch remotely if hash is different, get local if not
+    if (hash !== window.localStorage.getItem("hash")) {
+        out = await get_remote();
+    } else {
+        out = JSON.parse(window.localStorage.getItem("takeoffs"));
+
+        // Fetch remotely if missing any fields
+        l1: for (let takeoff of out) {
+            l2: for (let field of fields) {
+                if (takeoff[field] === null) {
+                    out = await get_remote();
+                    break l1;
+                }
+            }
+        }
+    }
+
+    return out;
+}
+
+/**
  * Hash a string.
  * 
  * @param {String} str - A string.
