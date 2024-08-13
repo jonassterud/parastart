@@ -149,3 +149,61 @@ a, a:visited, a:hover, a:active {
     background-color: var(--background-color);
     color: var(--text-color);
 }
+
+/* Compass */
+
+.compass {
+    --compass-size: 200px;
+
+    width: var(--compass-size);
+    min-width: var(--compass-size);
+    height: var(--compass-size);
+    min-height: var(--compass-size);
+
+    background-color: #b3b3b3;
+    border-radius: 100%;
+    border: 1px solid black;
+    box-sizing: content-box;    
+}
+
+.compass div {
+    width: inherit;
+    height: inherit;
+
+    position: absolute;
+
+    border-radius: 100%;
+    background-color: #00ff00;
+}
+
+.compass #N {
+    clip-path: polygon(25% 0%, 50% 50%, 75% 0%);
+}
+
+.compass #NE {
+    clip-path: polygon(75% 0%, 50% 50%, 100% 25%);
+}
+
+.compass #E {
+    clip-path: polygon(100% 25%, 50% 50%, 100% 75%);
+}
+
+.compass #SE {
+    clip-path: polygon(100% 75%, 50% 50%, 75% 100%);
+}
+
+.compass #S {
+    clip-path: polygon(75% 100%, 50% 50%, 25% 100%);
+}
+
+.compass #SW {
+    clip-path: polygon(25% 100%, 50% 50%, 0% 75%);
+}
+
+.compass #W {
+    clip-path: polygon(0% 75%, 50% 50%, 0% 25%);
+}
+
+.compass #NW {
+    clip-path: polygon(0% 25%, 50% 50%, 25% 0%);
+}

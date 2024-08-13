@@ -70,7 +70,7 @@ async function display_takeoff(takeoff) {
 
     // Configure compass
     takeoff.wind_dirs.forEach((dir) => {
-        const e_dir = document.querySelector(`#compass #${dir}`);
+        const e_dir = document.querySelector(`.compass #${dir}`);
         e_dir.removeAttribute("hidden");
     });
 
