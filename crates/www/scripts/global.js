@@ -76,6 +76,8 @@ async function fetch_all_takeoffs_prefer_local(fields) {
         const takeoffs = await fetch_takeoffs(undefined, undefined, undefined, fields);
         window.localStorage.setItem("takeoffs", JSON.stringify(takeoffs));
         window.localStorage.setItem("hash", cyrb53(takeoffs.map((v) => v.id).join('')).toString());
+
+        return takeoffs;
     };
 
     // Fetch remotely if hash is different, get local if not
