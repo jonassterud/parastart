@@ -67,12 +67,11 @@ function handle_sorting(data) {
     // Get HTML elements
     const e_search = document.getElementById("search");
     const e_name_header = document.getElementById("name-header");
-    const e_description_header = document.getElementById("description-header");
     const e_region_header = document.getElementById("region-header");
     const e_location_header = document.getElementById("location-header");
 
     // Guard against missing elements
-    const required_elements = [e_search, e_name_header, e_description_header, e_region_header, e_location_header];
+    const required_elements = [e_search, e_name_header, e_region_header, e_location_header];
     if (required_elements.includes(null)) throw new Error("missing HTML elements");
 
     // Search sort
@@ -90,7 +89,6 @@ function handle_sorting(data) {
     // Name, description, region and location sort
     try {
         e_name_header.addEventListener("click", async (e) => alphabetic_sort(data, e.target, (v) => v.name), false);
-        e_description_header.addEventListener("click", async (e) => alphabetic_sort(data, e.target, (v) => v.description), false);
         e_region_header.addEventListener("click", async (e) => alphabetic_sort(data, e.target, (v) => v.region), false);
         e_location_header.addEventListener("click", async (e) => location_sort(data, e.target), false);
     } catch (error) {
@@ -128,7 +126,7 @@ function alphabetic_sort(data, element, fn) {
  * 
  * @param {Array<Array<Object>>} data - Takeoff data and their nodes.
  * @param {HTMLElement} element - HTML element that was clicked.
- * @copyright https://stackoverflow.com/a/21623206
+ * @copyright Distance formula: https://stackoverflow.com/a/21623206
  */
 function location_sort(data, element) {
     const prevOrder =  element.getAttribute("order") || "asc";
