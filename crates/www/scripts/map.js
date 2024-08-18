@@ -81,10 +81,11 @@ function icon_for(takeoff) {
 
     compass.append(n, ne, e, se, s, sw, w, nw);
 
-    [...compass.children].forEach((e) => e.setAttribute("hidden", ""));
     [...compass.children].forEach((e) => {
         if (takeoff.wind_dirs.includes(e.id)) {
             e.removeAttribute("hidden");
+        } else {
+            e.setAttribute("hidden", "");
         }
     });
 
