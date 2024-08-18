@@ -60,26 +60,14 @@ async function init_map() {
 
 function icon_for(takeoff) {
     const compass = document.createElement("div");
-    const n = document.createElement("div");
-    const ne = document.createElement("div");
-    const e = document.createElement("div");
-    const se = document.createElement("div");
-    const s = document.createElement("div");
-    const sw = document.createElement("div");
-    const w = document.createElement("div");
-    const nw = document.createElement("div");
-
     compass.classList.add("compass");
-    n.setAttribute("id", "N");
-    ne.setAttribute("id", "NE");
-    e.setAttribute("id", "E");
-    se.setAttribute("id", "SE");
-    s.setAttribute("id", "S");
-    sw.setAttribute("id", "SW");
-    w.setAttribute("id", "W");
-    nw.setAttribute("id", "NW");
 
-    compass.append(n, ne, e, se, s, sw, w, nw);
+    const dirs = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
+    for (let dir of dirs) {
+        const e = document.createElement("div");
+        e.setAttribute("id", dir);
+        compass.append(e)
+    }
 
     [...compass.children].forEach((e) => {
         if (takeoff.wind_dirs.includes(e.id)) {
