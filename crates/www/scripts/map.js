@@ -37,10 +37,9 @@ async function init_map() {
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map);
 
-    // Fetch takeoffs
-    const takeoffs = await fetch_all_takeoffs_prefer_local(["name", "latitude", "longitude", "wind_dirs"]);
-    // Create marker clusters
+    // Fetch takeoffs and create markers
     const markers = L.markerClusterGroup();
+    const takeoffs = await fetch_all_takeoffs_prefer_local(["name", "latitude", "longitude", "wind_dirs"]);
     for (let takeoff of takeoffs) {
         const icon = L.divIcon({
             className: "marker-icon",
@@ -55,6 +54,7 @@ async function init_map() {
         marker.bindPopup(`<a href="/takeoffs?id=${takeoff.id}" target="_blank">${takeoff.name}</a>`);
         markers.addLayer(marker);
     }
+
     map.addLayer(markers);
 }
 
