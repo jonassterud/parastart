@@ -1,11 +1,11 @@
 <picture>
-  <source width='150px' srcset='media/logo/vector/isolated-monochrome-white.svg' media='(prefers-color-scheme: dark)' alt="Parstart">
-  <img width='150px' src='media/logo/vector/isolated-monochrome-black.svg' alt="Parastart">
+<source width='150px' srcset='media/logo/vector/isolated-monochrome-white.svg' media='(prefers-color-scheme: dark)' alt="Parstart">
+<img width='150px' src='media/logo/vector/isolated-monochrome-black.svg' alt="Parastart">
 </picture>
-
-<br>
+<br><br>
 <a href="https://github.com/jonassterud/parastart/actions/workflows/ci.yml"><img src="https://github.com/jonassterud/parastart/actions/workflows/ci.yml/badge.svg"></a>
 <a href="https://github.com/jonassterud/parastart/actions/workflows/cd.yml"><img src="https://github.com/jonassterud/parastart/actions/workflows/cd.yml/badge.svg"></a>
+
 
 ## About
 
@@ -13,7 +13,7 @@ An overview of paragliding takeoffs, relevant weather websites, etc.
 
 # Screenshots
 
-<div style="display: flex; flex-wrap: wrap; justify-content: center;">
+<div style="display: flex; flex-wrap: wrap;">
     <img width='49%' style="margin: 0.5%" src="media/screenshots/1.png">
     <img width='49%' style="margin: 0.5%" src="media/screenshots/2.png">
     <img width='49%' style="margin: 0.5%" src="media/screenshots/3.png">
