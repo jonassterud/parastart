@@ -172,6 +172,8 @@ function location_sort(data, element) {
             }
         }, (error) => {
             console.error(error);
+        }, {
+            enableHighAccuracy: true
         });
     }
 }
