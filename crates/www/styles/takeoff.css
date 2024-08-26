@@ -51,6 +51,11 @@
     width: 650px;
 }
 
+#windy-iframe {
+    overflow: hidden !important;
+    pointer-events: none !important;
+}
+
 #windy-height {
     width: 90%;
 }
