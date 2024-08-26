@@ -1,0 +1,15 @@
+.default-main {
+    padding: 0px !important;
+}
+
+#map {
+    height: 100%;
+}
+
+#map .compass {
+    --compass-size: 100% !important;
+}
+
+.marker-icon {
+    background-color: none;
+}

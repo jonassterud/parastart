@@ -1,9 +1,5 @@
 use axum::{
-    async_trait,
-    extract::{FromRequestParts, Query, Request},
-    http::request::Parts,
-    routing::get,
-    Router,
+    async_trait, extract::{FromRequestParts, Query, Request}, http::request::Parts, response::Redirect, routing::get, Router
 };
 use serde::Deserialize;
 use tower::ServiceExt;
@@ -14,7 +10,10 @@ pub fn router() -> Router {
         .nest_service("/scripts", ServeDir::new("crates/www/scripts"))
         .nest_service("/styles", ServeDir::new("crates/www/styles"))
         .nest_service("/assets", ServeDir::new("crates/www/assets"))
-        .nest_service("/", ServeFile::new("crates/www/pages/home.html"))
+        .nest_service("/vendor", ServeDir::new("crates/www/vendor"))
+        .route("/", get(|| async { Redirect::permanent("/map") }))
+        .nest_service("/map", ServeFile::new("crates/www/pages/map.html"))
+        .nest_service("/about", ServeFile::new("crates/www/pages/about.html"))
         .nest_service(
             "/takeoffs",
             get(|params: Params, request: Request| async move {

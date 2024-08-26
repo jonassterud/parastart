@@ -24,11 +24,11 @@
     justify-content: space-between;
 }
 
-#name-header:hover, #description-header:hover, #region-header:hover, #location-header:hover {
+#name-header:hover, #region-header:hover, #location-header:hover {
     cursor: pointer;
 }
 
-#name-header:active, #description-header:active, #region-header:active, #location-header:active {
+#name-header:active, #region-header:active, #location-header:active {
     cursor: wait;
 }
 
