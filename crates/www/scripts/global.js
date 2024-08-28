@@ -118,6 +118,7 @@ async function get_location(cache_time_limit=3600000) {
         if (navigator.geolocation === null) return reject(new Error("location API not available"));
 
         navigator.geolocation.getCurrentPosition((pos) => {
+            console.log(pos);
             location.latitude = pos.coords.latitude;
             location.longitude = pos.coords.longitude;
             location.timestamp = pos.timestamp;

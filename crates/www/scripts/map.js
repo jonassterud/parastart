@@ -10,8 +10,32 @@ window.onload = () => {
 
 async function init_map() {
     // Get cached location if any, and create map
-    const map = L.map('map').setView([59.911491, 10.757933], 13)
-    get_location().then((location) => map.setView([location.latitude, location.longitude], 13))
+    const map = L.map('map').setView([59.911491, 10.757933], 13);
+
+    // Override the "getCurrentPosition" function 
+    navigator.geolocation.getCurrentPosition = (success, _) => {
+        success({
+            coords: {
+                latitude: 45.4111,
+                longitude: -75.6981,
+            },
+            timestamp: Date.now(),
+        });
+    }
+
+    // Add "locate" plugin
+    const locate = L.control.locate({
+        locateOptions: {
+            enableHighAccuracy: true,
+            returnToPrevBounds: true,
+        },
+        strings: {
+            popup: `Wrong? <a href="/settings">Set location</a>`
+        },
+    }).addTo(map);
+    
+    // Override position for "locate" plugin if configured
+    // todo
 
     // Set layer
     // see also: https://www.maptoolkit.com/doc/tileserver/leaflet/
