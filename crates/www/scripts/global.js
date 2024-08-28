@@ -101,6 +101,38 @@ async function fetch_all_takeoffs_prefer_local(fields) {
 }
 
 /**
+ * Get the location in latitude and longitude, either from cache or current.
+ * 
+ * @param {Number} cache_time_ms - Number of milliseconds time offset to prefer cache. Defaults to 1 hour.
+ * @returns {Promise<Object>} The location.
+ */
+async function get_location(cache_time_limit=3600000) {
+    const location = JSON.parse(window.localStorage.getItem("location")) || {
+        latitude: null,
+        longitude: null,
+        timestamp: null,
+    };
+
+    return new Promise((resolve, reject) => {
+        if (location?.timestamp !== null && location.timestamp + cache_time_limit >= Date.now()) return resolve(location);
+        if (navigator.geolocation === null) return reject(new Error("location API not available"));
+
+        navigator.geolocation.getCurrentPosition((pos) => {
+            location.latitude = pos.coords.latitude;
+            location.longitude = pos.coords.longitude;
+            location.timestamp = pos.timestamp;
+            window.localStorage.setItem("location", JSON.stringify(location));
+
+            return resolve(location);
+        }, (error) => {
+            return reject(error)
+        }, {
+            enableHighAccuracy: true
+        });
+    });
+}
+
+/**
  * Hash a string.
  * 
  * @param {String} str - A string.

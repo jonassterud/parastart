@@ -88,6 +88,7 @@ function handle_sorting(data) {
 
     // Name, description, region and location sort
     try {
+        // todo: remove async on location sort?
         e_name_header.addEventListener("click", async (e) => alphabetic_sort(data, e.target, (v) => v.name), false);
         e_region_header.addEventListener("click", async (e) => alphabetic_sort(data, e.target, (v) => v.region), false);
         e_location_header.addEventListener("click", async (e) => location_sort(data, e.target), false);
@@ -128,52 +129,44 @@ function alphabetic_sort(data, element, fn) {
  * @param {HTMLElement} element - HTML element that was clicked.
  * @copyright Distance formula: https://stackoverflow.com/a/21623206
  */
-function location_sort(data, element) {
+async function location_sort(data, element) {
     const prevOrder =  element.getAttribute("order") || "asc";
     element.setAttribute("order", prevOrder === "asc" ? "desc" : "asc");
-    
-    // TODO: Re-use distance and update based on timestamp
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition((pos) => {
-            // Distance formula
-            const r = 6371;
-            const p = Math.PI / 180;
-            const dist = (a, b) => {
-                const n = 0.5 - Math.cos((b.latitude - a.latitude) * p) / 2
-                + Math.cos(a.latitude * p) * Math.cos(b.latitude * p) *
-                  (1 - Math.cos((b.longitude - a.longitude) * p)) / 2;
 
-                return 2 * r * Math.asin(Math.sqrt(n));
-            };
+    // Distance formula
+    const r = 6371;
+    const p = Math.PI / 180;
+    const dist = (a, b) => {
+        const n = 0.5 - Math.cos((b.latitude - a.latitude) * p) / 2
+        + Math.cos(a.latitude * p) * Math.cos(b.latitude * p) *
+            (1 - Math.cos((b.longitude - a.longitude) * p)) / 2;
 
-            // Map the distance
-            data = data.map((v) => {
-                const distance = dist(v[0], pos.coords);
-                v[0]["distance"] = distance
+        return 2 * r * Math.asin(Math.sqrt(n));
+    };
 
-                return v;
-            });
+    // Map the distance
+    const location = await get_location();
+    data = data.map((v) => {
+        const distance = dist(v[0], location);
+        v[0]["distance"] = distance
 
-            // Sort and apply order
-            data.sort((a, b) => a[0].distance - b[0].distance);
-            for (let i = 0; i < data.length; i++) {
-                if (prevOrder === "desc") {
-                    data[i][1].style.order = i;
-                } else if (prevOrder === "asc") {
-                    data[data.length - 1 - i][1].style.order = i;
-                } else {
-                    throw new Error(`unexpected prevOrder: ${prevOrder}`);
-                }
+        return v;
+    });
 
-                // Display distance
-                const e_location = data[i][1].getElementsByClassName("distance").item(0);
-                if (e_location === null) throw new Error("missing HTML element");
-                e_location.innerText = `Ca. ${data[i][0].distance.toFixed(2)} km`;
-            }
-        }, (error) => {
-            console.error(error);
-        }, {
-            enableHighAccuracy: true
-        });
+    // Sort and apply order
+    data.sort((a, b) => a[0].distance - b[0].distance);
+    for (let i = 0; i < data.length; i++) {
+        if (prevOrder === "desc") {
+            data[i][1].style.order = i;
+        } else if (prevOrder === "asc") {
+            data[data.length - 1 - i][1].style.order = i;
+        } else {
+            throw new Error(`unexpected prevOrder: ${prevOrder}`);
+        }
+
+        // Display distance
+        const e_location = data[i][1].getElementsByClassName("distance").item(0);
+        if (e_location === null) throw new Error("missing HTML element");
+        e_location.innerText = `Ca. ${data[i][0].distance.toFixed(2)} km`;
     }
 }

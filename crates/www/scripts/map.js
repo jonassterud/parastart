@@ -10,24 +10,8 @@ window.onload = () => {
 
 async function init_map() {
     // Get cached location if any, and create map
-    const location = JSON.parse(window.localStorage.getItem("location"));
-    const map = L.map('map').setView([location?.latitude || 59.911491, location?.longitude || 10.757933], 13)
-    
-    // Locate again if 1 hour since last known location
-    const ONE_HOUR_MS = 3600000;
-    if (location === null || location.timestamp + ONE_HOUR_MS < Date.now()) {
-        map.locate({ setView: true })
-        .on('locationfound', (e) => {
-            window.localStorage.setItem("location", JSON.stringify({
-                latitude: e.latitude,
-                longitude: e.longitude,
-                timestamp: e.timestamp,
-            }));
-        })
-        .on('locationerror', (e) => {
-            console.error(e);
-        });
-    }
+    const map = L.map('map').setView([59.911491, 10.757933], 13)
+    get_location().then((location) => map.setView([location.latitude, location.longitude], 13))
 
     // Set layer
     // see also: https://www.maptoolkit.com/doc/tileserver/leaflet/
